@@ -1,0 +1,151 @@
+2024-10-31 21:54:18,663 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2024-10-31 21:54:20,005 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [1. 1.]
+2024-10-31 21:54:38,393 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2024-10-31 21:54:39,607 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 40457.674353443545, best pos: [-5.          4.89485778]
+2024-10-31 21:55:06,923 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2024-10-31 21:55:09,183 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [1. 1.]
+2024-10-31 21:55:22,044 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2024-10-31 21:55:23,343 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [1. 1.]
+2024-10-31 22:11:23,857 - pygad.pygad - ERROR - When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space (1) != num_genes (32)
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 431, in __init__
+    raise ValueError(f"When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space ({len(gene_space)}) != num_genes ({self.num_genes})")
+ValueError: When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space (1) != num_genes (32)
+2024-10-31 22:12:58,754 - pygad.pygad - ERROR - When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space (1) != num_genes (32)
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 431, in __init__
+    raise ValueError(f"When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space ({len(gene_space)}) != num_genes ({self.num_genes})")
+ValueError: When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space (1) != num_genes (32)
+2024-10-31 22:15:56,388 - pygad.pygad - ERROR - Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 612, in __init__
+    raise TypeError(f"Undefined crossover type. \nThe assigned value to the crossover_type ({crossover_type}) parameter does not refer to one of the supported crossover types which are: \n-single_point (for single point crossover)\n-two_points (for two points crossover)\n-uniform (for uniform crossover)\n-scattered (for scattered crossover).\n")
+TypeError: Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+
+2024-10-31 22:16:19,288 - pygad.pygad - ERROR - Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 612, in __init__
+    raise TypeError(f"Undefined crossover type. \nThe assigned value to the crossover_type ({crossover_type}) parameter does not refer to one of the supported crossover types which are: \n-single_point (for single point crossover)\n-two_points (for two points crossover)\n-uniform (for uniform crossover)\n-scattered (for scattered crossover).\n")
+TypeError: Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+
+2024-10-31 22:17:49,850 - pygad.pygad - ERROR - When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space (1) != num_genes (32)
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 431, in __init__
+    raise ValueError(f"When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space ({len(gene_space)}) != num_genes ({self.num_genes})")
+ValueError: When the parameter 'gene_space' is nested, then its length must be equal to the value passed to the 'num_genes' parameter. Instead, length of gene_space (1) != num_genes (32)
+2024-10-31 22:18:07,340 - pygad.pygad - ERROR - Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 612, in __init__
+    raise TypeError(f"Undefined crossover type. \nThe assigned value to the crossover_type ({crossover_type}) parameter does not refer to one of the supported crossover types which are: \n-single_point (for single point crossover)\n-two_points (for two points crossover)\n-uniform (for uniform crossover)\n-scattered (for scattered crossover).\n")
+TypeError: Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+
+2024-10-31 22:21:15,711 - pygad.pygad - ERROR - Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 612, in __init__
+    raise TypeError(f"Undefined crossover type. \nThe assigned value to the crossover_type ({crossover_type}) parameter does not refer to one of the supported crossover types which are: \n-single_point (for single point crossover)\n-two_points (for two points crossover)\n-uniform (for uniform crossover)\n-scattered (for scattered crossover).\n")
+TypeError: Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+
+2024-10-31 22:22:40,226 - pygad.pygad - ERROR - Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 612, in __init__
+    raise TypeError(f"Undefined crossover type. \nThe assigned value to the crossover_type ({crossover_type}) parameter does not refer to one of the supported crossover types which are: \n-single_point (for single point crossover)\n-two_points (for two points crossover)\n-uniform (for uniform crossover)\n-scattered (for scattered crossover).\n")
+TypeError: Undefined crossover type. 
+The assigned value to the crossover_type (ordered) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+
+2024-10-31 22:23:03,104 - pygad.pygad - ERROR - Undefined crossover type. 
+The assigned value to the crossover_type (singe_point) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 612, in __init__
+    raise TypeError(f"Undefined crossover type. \nThe assigned value to the crossover_type ({crossover_type}) parameter does not refer to one of the supported crossover types which are: \n-single_point (for single point crossover)\n-two_points (for two points crossover)\n-uniform (for uniform crossover)\n-scattered (for scattered crossover).\n")
+TypeError: Undefined crossover type. 
+The assigned value to the crossover_type (singe_point) parameter does not refer to one of the supported crossover types which are: 
+-single_point (for single point crossover)
+-two_points (for two points crossover)
+-uniform (for uniform crossover)
+-scattered (for scattered crossover).
+
+2024-10-31 22:23:15,291 - pygad.pygad - ERROR - In PyGAD 2.20.0, the fitness function must accept 3 parameters:
+1) The instance of the 'pygad.GA' class.
+2) A solution to calculate its fitness value.
+3) The solution's index within the population.
+
+The passed fitness function named 'fitness_func' accepts 2 parameter(s).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 951, in __init__
+    raise ValueError(f"In PyGAD 2.20.0, the fitness function must accept 3 parameters:\n1) The instance of the 'pygad.GA' class.\n2) A solution to calculate its fitness value.\n3) The solution's index within the population.\n\nThe passed fitness function named '{fitness_func.__code__.co_name}' accepts {fitness_func.__code__.co_argcount} parameter(s).")
+ValueError: In PyGAD 2.20.0, the fitness function must accept 3 parameters:
+1) The instance of the 'pygad.GA' class.
+2) A solution to calculate its fitness value.
+3) The solution's index within the population.
+
+The passed fitness function named 'fitness_func' accepts 2 parameter(s).
+2024-11-02 13:53:31,628 - pygad.pygad - ERROR - In PyGAD 2.20.0, the fitness function must accept 3 parameters:
+1) The instance of the 'pygad.GA' class.
+2) A solution to calculate its fitness value.
+3) The solution's index within the population.
+
+The passed fitness function named 'fitness_func' accepts 2 parameter(s).
+Traceback (most recent call last):
+  File "c:\Users\57320\anaconda3\Lib\site-packages\pygad\pygad.py", line 951, in __init__
+    raise ValueError(f"In PyGAD 2.20.0, the fitness function must accept 3 parameters:\n1) The instance of the 'pygad.GA' class.\n2) A solution to calculate its fitness value.\n3) The solution's index within the population.\n\nThe passed fitness function named '{fitness_func.__code__.co_name}' accepts {fitness_func.__code__.co_argcount} parameter(s).")
+ValueError: In PyGAD 2.20.0, the fitness function must accept 3 parameters:
+1) The instance of the 'pygad.GA' class.
+2) A solution to calculate its fitness value.
+3) The solution's index within the population.
+
+The passed fitness function named 'fitness_func' accepts 2 parameter(s).
+2024-11-02 13:53:54,510 - matplotlib.legend - WARNING - No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+2024-11-02 13:54:25,734 - matplotlib.legend - WARNING - No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.

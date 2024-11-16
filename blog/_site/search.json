@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Portafolio trabajos",
+    "section": "",
+    "text": "Primer trabajo: Optimización heurística\n\n\n\n\n\n\noptimización\n\n\n\n\n\n\n\n\n\nNov 15, 2024\n\n\nCatalina Restrepo Salgado, Julián Castaño Pineda, Tomás Rodríguez Taborda, Luis Andrés Altamar Romero\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nNov 12, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Primer trabajo: Optimización heurística",
+    "section": "",
+    "text": "Función de Rosenbrock\nFunción de Rastrigin\nFunción de Schwefel\nFunción de Griewank\nFunción Goldstein-Price\nFunción de las seis jorobas de camello\n\n\n\n\nEscoja dos funciones de prueba.\nOptimización con método de descenso por gradiente:\n\nOptimice las funciones seleccionadas en dos y tres dimensiones usando un método de descenso por gradiente con condición inicial aleatoria.\n\nOptimización con métodos heurísticos:\n\nOptimice las funciones seleccionadas en dos y tres dimensiones usando:\n\nAlgoritmos evolutivos.\nOptimización de partículas.\nEvolución diferencial.\n\n\nRepresentación visual:\n\nCree un GIF animado o un video que muestre el proceso de optimización usando:\n\nDescenso por gradiente.\nMétodos heurísticos.\n\n\n\n\n\n\nReflexione sobre los siguientes puntos: - ¿Qué aportaron los métodos de descenso por gradiente y qué aportaron los métodos heurísticos? - Para responder a esta pregunta, considere: - El valor final de la función objetivo. - El número de evaluaciones de la función objetivo. - Es posible que se requiera realizar varias corridas de los algoritmos para obtener conclusiones significativas."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html#considere-las-siguientes-funciones-de-prueba",
+    "href": "posts/post-with-code/index.html#considere-las-siguientes-funciones-de-prueba",
+    "title": "Primer trabajo: Optimización heurística",
+    "section": "",
+    "text": "Función de Rosenbrock\nFunción de Rastrigin\nFunción de Schwefel\nFunción de Griewank\nFunción Goldstein-Price\nFunción de las seis jorobas de camello\n\n\n\n\nEscoja dos funciones de prueba.\nOptimización con método de descenso por gradiente:\n\nOptimice las funciones seleccionadas en dos y tres dimensiones usando un método de descenso por gradiente con condición inicial aleatoria.\n\nOptimización con métodos heurísticos:\n\nOptimice las funciones seleccionadas en dos y tres dimensiones usando:\n\nAlgoritmos evolutivos.\nOptimización de partículas.\nEvolución diferencial.\n\n\nRepresentación visual:\n\nCree un GIF animado o un video que muestre el proceso de optimización usando:\n\nDescenso por gradiente.\nMétodos heurísticos.\n\n\n\n\n\n\nReflexione sobre los siguientes puntos: - ¿Qué aportaron los métodos de descenso por gradiente y qué aportaron los métodos heurísticos? - Para responder a esta pregunta, considere: - El valor final de la función objetivo. - El número de evaluaciones de la función objetivo. - Es posible que se requiera realizar varias corridas de los algoritmos para obtener conclusiones significativas."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html#problema-del-viajero",
+    "href": "posts/post-with-code/index.html#problema-del-viajero",
+    "title": "Primer trabajo: Optimización heurística",
+    "section": "Problema del Viajero:",
+    "text": "Problema del Viajero:\nUn vendedor debe realizar un recorrido por todas las capitales de los 32 estados de los Estados Unidos Mexicanos.\n\nTareas:\n\nOptimización con métodos metaheurísticos:\n\nUtilice colonias de hormigas para encontrar el orden óptimo del recorrido.\nUtilice algoritmos genéticos para encontrar el orden óptimo del recorrido.\n\nCosto del recorrido:\n\nEl costo de desplazamiento entre ciudades se calcula como la suma de:\n\nEl valor de la hora del vendedor (este es un parámetro que debe estudiarse).\nEl costo de los peajes.\nEl costo del combustible.\n\nCada equipo debe definir el vehículo que utilizará el vendedor para realizar el recorrido y, con base en esta elección, calcular el costo del combustible.\n\n\n\n\nRepresentación Visual:\n\nCree un GIF animado o un video que muestre cómo se comporta la mejor solución encontrada, usando un gráfico del recorrido en el mapa de México.\n\n\n\n\nDiscusión:\nReflexione sobre: - Los resultados obtenidos con las colonias de hormigas y los algoritmos genéticos. - Comparación de costos y tiempo de ejecución."
+  }
+]

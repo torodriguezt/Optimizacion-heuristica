@@ -1,0 +1,70 @@
+---
+title: "Primer trabajo: Optimización heurística"
+author:
+  - name: "Catalina Restrepo Salgado"
+  - name: "Julián Castaño Pineda"
+  - name: "Tomás Rodríguez Taborda"
+  - name: "Luis Andrés Altamar Romero"
+date: "2024-11-15"
+categories: [optimización]
+image: "image.jpg"
+---
+
+# Primera parte: Optimización Numérica
+
+## Considere las siguientes funciones de prueba:
+- **Función de Rosenbrock**
+- **Función de Rastrigin**
+- **Función de Schwefel**
+- **Función de Griewank**
+- **Función Goldstein-Price**
+- **Función de las seis jorobas de camello**
+
+### Tareas:
+1. **Escoja dos funciones de prueba.**
+2. **Optimización con método de descenso por gradiente:**
+   - Optimice las funciones seleccionadas en **dos y tres dimensiones** usando un **método de descenso por gradiente** con condición inicial aleatoria.
+3. **Optimización con métodos heurísticos:**
+   - Optimice las funciones seleccionadas en **dos y tres dimensiones** usando:
+     - Algoritmos evolutivos.
+     - Optimización de partículas.
+     - Evolución diferencial.
+4. **Representación visual:**
+   - Cree un **GIF animado** o un **video** que muestre el proceso de optimización usando:
+     - **Descenso por gradiente**.
+     - **Métodos heurísticos**.
+
+### Discusión:
+Reflexione sobre los siguientes puntos:
+- ¿Qué aportaron los métodos de **descenso por gradiente** y qué aportaron los **métodos heurísticos**?
+  - Para responder a esta pregunta, considere:
+    - El **valor final** de la función objetivo.
+    - El **número de evaluaciones** de la función objetivo.
+  - Es posible que se requiera realizar **varias corridas** de los algoritmos para obtener conclusiones significativas.
+
+
+# Parte 2: Optimización Combinatoria
+
+## Problema del Viajero:
+Un vendedor debe realizar un recorrido por **todas las capitales** de los **32 estados** de los **Estados Unidos Mexicanos**.
+
+### Tareas:
+1. **Optimización con métodos metaheurísticos:**
+   - Utilice **colonias de hormigas** para encontrar el orden óptimo del recorrido.
+   - Utilice **algoritmos genéticos** para encontrar el orden óptimo del recorrido.
+2. **Costo del recorrido:**
+   - El costo de desplazamiento entre ciudades se calcula como la suma de:
+     - El valor de la **hora del vendedor** (este es un parámetro que debe estudiarse).
+     - El **costo de los peajes**.
+     - El **costo del combustible**.
+   - Cada equipo debe definir el **vehículo** que utilizará el vendedor para realizar el recorrido y, con base en esta elección, **calcular el costo del combustible**.
+
+### Representación Visual:
+- Cree un **GIF animado** o un **video** que muestre cómo se comporta la **mejor solución** encontrada, usando un **gráfico del recorrido** en el mapa de México.
+
+---
+
+### Discusión:
+Reflexione sobre:
+- Los resultados obtenidos con las **colonias de hormigas** y los **algoritmos genéticos**.
+- Comparación de costos y tiempo de ejecución.
