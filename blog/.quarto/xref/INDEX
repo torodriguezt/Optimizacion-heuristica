@@ -10,5 +10,8 @@
   },
   "posts/welcome/index.qmd": {
     "index.html": "7c6ac1e7"
+  },
+  "posts/heuristic-optimization/index.qmd": {
+    "index.html": "69dcaad3"
   }
 }

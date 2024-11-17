@@ -10,7 +10,7 @@
 <meta name="author" content="Julián Castaño Pineda">
 <meta name="author" content="Tomás Rodríguez Taborda">
 <meta name="author" content="Luis Andrés Altamar Romero">
-<meta name="dcterms.date" content="2024-11-15">
+<meta name="dcterms.date" content="2024-11-18">
 
 <title>Primer trabajo: Optimización heurística – Redes Neuronales Artificiales y Algoritmos Bioinspirados</title>
 <style>
@@ -76,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -95,7 +95,7 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link" href="../../about.html"> 
-<span class="menu-text">About</span></a>
+<span class="menu-text">Acerca de</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
@@ -136,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 15, 2024</p>
+        <p class="date">November 18, 2024</p>
       </div>
     </div>
     
@@ -147,7 +147,42 @@ ul.task-list li input[type="checkbox"] {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenidos</h2>
+   
+  <ul>
+  <li><a href="#primera-parte-optimización-numérica" id="toc-primera-parte-optimización-numérica" class="nav-link active" data-scroll-target="#primera-parte-optimización-numérica">Primera parte: Optimización Numérica</a>
+  <ul class="collapse">
+  <li><a href="#considere-las-siguientes-funciones-de-prueba" id="toc-considere-las-siguientes-funciones-de-prueba" class="nav-link" data-scroll-target="#considere-las-siguientes-funciones-de-prueba">Considere las siguientes funciones de prueba:</a>
+  <ul class="collapse">
+  <li><a href="#tareas" id="toc-tareas" class="nav-link" data-scroll-target="#tareas">Tareas:</a></li>
+  <li><a href="#discusión" id="toc-discusión" class="nav-link" data-scroll-target="#discusión">Discusión:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#parte-2-optimización-combinatoria" id="toc-parte-2-optimización-combinatoria" class="nav-link" data-scroll-target="#parte-2-optimización-combinatoria">Parte 2: Optimización Combinatoria</a>
+  <ul class="collapse">
+  <li><a href="#planteamiento-del-ejercicio" id="toc-planteamiento-del-ejercicio" class="nav-link" data-scroll-target="#planteamiento-del-ejercicio">Planteamiento del ejercicio</a>
+  <ul class="collapse">
+  <li><a href="#problema-del-viajero" id="toc-problema-del-viajero" class="nav-link" data-scroll-target="#problema-del-viajero">Problema del Viajero</a></li>
+  <li><a href="#tareas-1" id="toc-tareas-1" class="nav-link" data-scroll-target="#tareas-1">Tareas</a></li>
+  <li><a href="#representación-visual" id="toc-representación-visual" class="nav-link" data-scroll-target="#representación-visual">Representación Visual</a></li>
+  <li><a href="#discusión-propuesta" id="toc-discusión-propuesta" class="nav-link" data-scroll-target="#discusión-propuesta">Discusión propuesta</a></li>
+  </ul></li>
+  <li><a href="#desarrollo-del-ejercicio" id="toc-desarrollo-del-ejercicio" class="nav-link" data-scroll-target="#desarrollo-del-ejercicio">Desarrollo del ejercicio</a>
+  <ul class="collapse">
+  <li><a href="#preparativos-iniciales" id="toc-preparativos-iniciales" class="nav-link" data-scroll-target="#preparativos-iniciales">Preparativos iniciales</a></li>
+  <li><a href="#implementación-de-métodos-metaheurísticos" id="toc-implementación-de-métodos-metaheurísticos" class="nav-link" data-scroll-target="#implementación-de-métodos-metaheurísticos">Implementación de métodos metaheurísticos</a></li>
+  <li><a href="#cálculo-del-costo-del-recorrido" id="toc-cálculo-del-costo-del-recorrido" class="nav-link" data-scroll-target="#cálculo-del-costo-del-recorrido">Cálculo del costo del recorrido</a></li>
+  <li><a href="#visualización" id="toc-visualización" class="nav-link" data-scroll-target="#visualización">Visualización</a></li>
+  <li><a href="#análisis-y-discusión-de-resultados" id="toc-análisis-y-discusión-de-resultados" class="nav-link" data-scroll-target="#análisis-y-discusión-de-resultados">Análisis y discusión de resultados</a></li>
+  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión">Conclusión</a></li>
+  </ul></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -160,12 +195,12 @@ ul.task-list li input[type="checkbox"] {
 <section id="considere-las-siguientes-funciones-de-prueba" class="level2">
 <h2 class="anchored" data-anchor-id="considere-las-siguientes-funciones-de-prueba">Considere las siguientes funciones de prueba:</h2>
 <ul>
-<li><strong>Función de Rosenbrock</strong></li>
-<li><strong>Función de Rastrigin</strong></li>
-<li><strong>Función de Schwefel</strong></li>
-<li><strong>Función de Griewank</strong></li>
-<li><strong>Función Goldstein-Price</strong></li>
-<li><strong>Función de las seis jorobas de camello</strong></li>
+<li>Función de Rosenbrock</li>
+<li>Función de Rastrigin</li>
+<li>Función de Schwefel</li>
+<li>Función de Griewank</li>
+<li>Función Goldstein-Price</li>
+<li>Función de las seis jorobas de camello</li>
 </ul>
 <section id="tareas" class="level3">
 <h3 class="anchored" data-anchor-id="tareas">Tareas:</h3>
@@ -202,11 +237,14 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="parte-2-optimización-combinatoria" class="level1">
 <h1>Parte 2: Optimización Combinatoria</h1>
-<section id="problema-del-viajero" class="level2">
-<h2 class="anchored" data-anchor-id="problema-del-viajero">Problema del Viajero:</h2>
+<section id="planteamiento-del-ejercicio" class="level2">
+<h2 class="anchored" data-anchor-id="planteamiento-del-ejercicio">Planteamiento del ejercicio</h2>
+<section id="problema-del-viajero" class="level3">
+<h3 class="anchored" data-anchor-id="problema-del-viajero">Problema del Viajero</h3>
 <p>Un vendedor debe realizar un recorrido por <strong>todas las capitales</strong> de los <strong>32 estados</strong> de los <strong>Estados Unidos Mexicanos</strong>.</p>
+</section>
 <section id="tareas-1" class="level3">
-<h3 class="anchored" data-anchor-id="tareas-1">Tareas:</h3>
+<h3 class="anchored" data-anchor-id="tareas-1">Tareas</h3>
 <ol type="1">
 <li><strong>Optimización con métodos metaheurísticos:</strong>
 <ul>
@@ -226,18 +264,102 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 </section>
 <section id="representación-visual" class="level3">
-<h3 class="anchored" data-anchor-id="representación-visual">Representación Visual:</h3>
+<h3 class="anchored" data-anchor-id="representación-visual">Representación Visual</h3>
 <ul>
 <li>Cree un <strong>GIF animado</strong> o un <strong>video</strong> que muestre cómo se comporta la <strong>mejor solución</strong> encontrada, usando un <strong>gráfico del recorrido</strong> en el mapa de México.</li>
 </ul>
 <hr>
 </section>
-<section id="discusión-1" class="level3">
-<h3 class="anchored" data-anchor-id="discusión-1">Discusión:</h3>
+<section id="discusión-propuesta" class="level3">
+<h3 class="anchored" data-anchor-id="discusión-propuesta">Discusión propuesta</h3>
 <p>Reflexione sobre: - Los resultados obtenidos con las <strong>colonias de hormigas</strong> y los <strong>algoritmos genéticos</strong>. - Comparación de costos y tiempo de ejecución.</p>
-
-
 </section>
+</section>
+<section id="desarrollo-del-ejercicio" class="level2">
+<h2 class="anchored" data-anchor-id="desarrollo-del-ejercicio">Desarrollo del ejercicio</h2>
+<section id="preparativos-iniciales" class="level3">
+<h3 class="anchored" data-anchor-id="preparativos-iniciales">Preparativos iniciales</h3>
+<ol type="1">
+<li><strong>Recopilación de datos:</strong>
+<ul>
+<li>Obtener la lista de las 32 capitales de los estados mexicanos y sus coordenadas geográficas.</li>
+<li>Investigar y asignar valores para los costos de los peajes, el precio del combustible por kilómetro y el valor de la hora del vendedor.</li>
+</ul></li>
+<li><strong>Definición del vehículo:</strong>
+<ul>
+<li>Elegir el vehículo (considerando su rendimiento en kilómetros por litro y la capacidad del tanque de combustible).</li>
+</ul></li>
+<li><strong>Preparar herramientas visuales:</strong>
+<ul>
+<li>Un mapa de México para la representación gráfica.</li>
+</ul></li>
+</ol>
+</section>
+<section id="implementación-de-métodos-metaheurísticos" class="level3">
+<h3 class="anchored" data-anchor-id="implementación-de-métodos-metaheurísticos">Implementación de métodos metaheurísticos</h3>
+<ol type="1">
+<li>Colonias de hormigas
+<ul>
+<li>Diseñar y programar el algoritmo:
+<ul>
+<li>Crear la matriz de costos/distancias entre las ciudades.</li>
+<li>Implementar las funciones de feromonas y evaporación.</li>
+</ul></li>
+<li>Correr varias simulaciones para optimizar el recorrido.</li>
+<li>Guardar y documentar los resultados (incluyendo costos y tiempos).</li>
+</ul></li>
+<li>Algoritmos genéticos
+<ul>
+<li>Diseñar y programar el algoritmo:
+<ul>
+<li>Crear la representación de las soluciones (cromosomas) y las funciones de cruce, mutación y selección.</li>
+</ul></li>
+<li>Correr varias simulaciones para optimizar el recorrido.</li>
+<li>Guardar y documentar los resultados (incluyendo costos y tiempos).</li>
+</ul></li>
+</ol>
+</section>
+<section id="cálculo-del-costo-del-recorrido" class="level3">
+<h3 class="anchored" data-anchor-id="cálculo-del-costo-del-recorrido">Cálculo del costo del recorrido</h3>
+<ol type="1">
+<li>Calcular el costo total del recorrido óptimo hallado por cada método:
+<ul>
+<li>Combustible, basado en la distancia total y el rendimiento del vehículo.</li>
+<li>Peajes, estimados con datos de cada tramo de carretera.</li>
+<li>Costo del tiempo, considerando la duración del recorrido y el valor de la hora del vendedor.</li>
+</ul></li>
+</ol>
+</section>
+<section id="visualización" class="level3">
+<h3 class="anchored" data-anchor-id="visualización">Visualización</h3>
+<ol type="1">
+<li>Crear un gráfico del recorrido en el mapa de México.</li>
+<li>Diseñar un GIF o video que muestre la evolución de la solución encontrada (por ejemplo, cómo las feromonas convergen o cómo se mejoran los cromosomas en cada iteración).</li>
+</ol>
+</section>
+<section id="análisis-y-discusión-de-resultados" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-y-discusión-de-resultados">Análisis y discusión de resultados</h3>
+<ol type="1">
+<li>Comparar los resultados obtenidos por ambos métodos:
+<ul>
+<li>¿Cuál es más eficiente en tiempo y costo?</li>
+<li>¿Qué método encontró la mejor solución?</li>
+<li>Reflexionar sobre los desafíos y las diferencias en los enfoques.</li>
+</ul></li>
+</ol>
+</section>
+<section id="conclusión" class="level3">
+<h3 class="anchored" data-anchor-id="conclusión">Conclusión</h3>
+<ol type="1">
+<li>Resumir los aprendizajes obtenidos.</li>
+<li>Destacar el impacto del enfoque seleccionado y posibles mejoras futuras.</li>
+</ol>
+</section>
+</section>
+<section id="referencias" class="level2">
+<h2 class="anchored" data-anchor-id="referencias">Referencias</h2>
+
+
 </section>
 </section>
 
