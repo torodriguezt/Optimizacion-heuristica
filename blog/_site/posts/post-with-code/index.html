@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Catalina Restrepo Salgado">
+<meta name="author" content="Julián Castaño Pineda">
+<meta name="author" content="Tomás Rodríguez Taborda">
+<meta name="author" content="Luis Andrés Altamar Romero">
+<meta name="dcterms.date" content="2024-11-15">
+
+<title>Primer trabajo: Optimización heurística – Redes Neuronales Artificiales y Algoritmos Bioinspirados</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-01c78b5cd655e4cd89133cf59d535862.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-474c6d7e63be50eb6972897072b39b27.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-818b32141788da5f3afc8302f6e847b9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-1851c9bb8f3f4849af8ba858f06152b9.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Redes Neuronales Artificiales y Algoritmos Bioinspirados</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Primer trabajo: Optimización heurística</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                                <div class="quarto-categories">
+                <div class="quarto-category">optimización</div>
+                <div class="quarto-category">algoritmos genéticos</div>
+                <div class="quarto-category">colonia de hormigas</div>
+                <div class="quarto-category">webscrapping</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Catalina Restrepo Salgado </p>
+               <p>Julián Castaño Pineda </p>
+               <p>Tomás Rodríguez Taborda </p>
+               <p>Luis Andrés Altamar Romero </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 15, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#primera-parte-optimización-numérica" id="toc-primera-parte-optimización-numérica" class="nav-link active" data-scroll-target="#primera-parte-optimización-numérica">Primera parte: Optimización Numérica</a>
+  <ul class="collapse">
+  <li><a href="#funciones-a-optimizar" id="toc-funciones-a-optimizar" class="nav-link" data-scroll-target="#funciones-a-optimizar">Funciones a optimizar</a></li>
+  <li><a href="#proceso-de-optimización" id="toc-proceso-de-optimización" class="nav-link" data-scroll-target="#proceso-de-optimización">Proceso de optimización</a>
+  <ul class="collapse">
+  <li><a href="#optimización-por-descenso-del-gradiente" id="toc-optimización-por-descenso-del-gradiente" class="nav-link" data-scroll-target="#optimización-por-descenso-del-gradiente">Optimización por descenso del gradiente</a></li>
+  <li><a href="#tareas" id="toc-tareas" class="nav-link" data-scroll-target="#tareas">Tareas:</a></li>
+  <li><a href="#discusión" id="toc-discusión" class="nav-link" data-scroll-target="#discusión">Discusión:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#segunda-parte-optimización-combinatoria" id="toc-segunda-parte-optimización-combinatoria" class="nav-link" data-scroll-target="#segunda-parte-optimización-combinatoria">Segunda parte: Optimización Combinatoria</a>
+  <ul class="collapse">
+  <li><a href="#problema-del-viajero" id="toc-problema-del-viajero" class="nav-link" data-scroll-target="#problema-del-viajero">Problema del Viajero:</a>
+  <ul class="collapse">
+  <li><a href="#tareas-1" id="toc-tareas-1" class="nav-link" data-scroll-target="#tareas-1">Tareas:</a></li>
+  <li><a href="#representación-visual" id="toc-representación-visual" class="nav-link" data-scroll-target="#representación-visual">Representación Visual:</a></li>
+  <li><a href="#discusión-1" id="toc-discusión-1" class="nav-link" data-scroll-target="#discusión-1">Discusión:</a></li>
+  <li><a href="#solución" id="toc-solución" class="nav-link" data-scroll-target="#solución">Solución:</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<div id="b99729d7" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="primera-parte-optimización-numérica" class="level1">
+<h1>Primera parte: Optimización Numérica</h1>
+<p>El objetivo de esta sección es evaluar diversos métodos de optimización aplicados a varias funciones, con el fin de medir su rendimiento. En particular, se utilizarán las funciones de Rosenbrock, Schwefel, Griewank, Goldstein-Price y la función de las seis jorobas de camello. Estas funciones serán optimizadas mediante el método del gradiente descendente y tres algoritmos heurísticos: Algoritmos Evolutivos, Optimización por Enjambre de Partículas y Evolución Diferencial.</p>
+<p>Al final, se comentará sobre los aportes de los métodos de descenso por gradiente y los métodos heurísticos, considerando el valor final de la función objetivo y el número de evaluaciones de la función objetivo, en un entorno de simulación con varios parámetros y condiciones para garantizar conclusiones significativas.</p>
+<section id="funciones-a-optimizar" class="level2">
+<h2 class="anchored" data-anchor-id="funciones-a-optimizar">Funciones a optimizar</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Función de Rosenbrock</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Función de Rastrigin</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Función de Schwefel</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Función de Griewank</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Función Goldstein-Price</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">Función de las seis jorobas de camello</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><span class="math display">\[f(\mathbf{x}) = \sum_{i=1}^{d-1} \left[ 100(x_{i+1} - x_i^2)^2 + (x_i - 1)^2 \right]\]</span></p>
+<p>En 2 dimensiones se puede definir como <span class="math display">\[ f(x_1, x_2) = (a - x_1)^2 + b(x_2 - x_1^2)^2 \]</span></p>
+<p>La Función de Rosenbrock, también conocida como función del valle o del plátano, es ampliamente utilizada para evaluar algoritmos de optimización basados en gradientes. Esta función es unimodal y presenta su mínimo global en un valle parabólico estrecho, lo que facilita su localización. Sin embargo, segun <span class="citation" data-cites="simonfraser_rosenbrock">@simonfraser_rosenbrock</span> citando a <span class="citation" data-cites="picheny2012benchmark">@picheny2012benchmark</span> convergencia hacia este mínimo puede ser desafiante debido a la naturaleza del valle.</p>
+<p>La función se evalúa generalmente en el hipercubo <span class="math inline">\(x_i \in [-5, 10]\)</span> y tiene un mínimo global en <span class="math inline">\(f(1,...,1) = 0\)</span></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><span class="math display">\[f(\mathbf{x}) = 10d + \sum_{i=1}^{d} \left[ x_i^2 - 10 \cos(2\pi x_i) \right]\]</span></p>
+<p>Segun <span class="citation" data-cites="simonfraser_rosenbroc">@simonfraser_rosenbroc</span>, la función de Rastrigin tiene varios mínimos locales. Es altamente multimodal, pero las ubicaciones de los mínimos se distribuyen regularmente. La función generalmente se evalúa en el hipercubo <span class="math inline">\(x_i \in [-5.12, 5.12]\)</span> y su mínimo local se encuentra en <span class="math inline">\(f(0,...,0)=0\)</span>.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><span class="math display">\[ f(\mathbf{x}) = 418.9829d - \sum_{i=1}^{d} x_i \sin(\sqrt{|x_i|}) \]</span></p>
+<p>Segun <span class="citation" data-cites="simonfraser_rosenbrock">@simonfraser_rosenbrock</span> La función de Schwefel es compleja, con muchos mínimos locales. Normalmente se evalua en el hipercubo $x_i [-500,500] $. Su minimo global está en <span class="math inline">\(f(420.9687,...,420.9687)=0\)</span></p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p><span class="math display">\[ f(\mathbf{x}) = 1 + \frac{1}{4000} \sum_{i=1}^{d} x_i^2 - \prod_{i=1}^{d} \cos\left(\frac{x_i}{\sqrt{i}}\right) \]</span></p>
+<p>Segun <span class="citation" data-cites="simonfraser_rosenbrock">@simonfraser_rosenbrock</span> la función de Griewank tiene muchos mínimos locales generalizados, que se distribuyen de forma regular. Lo que hace compleja su optimización al minimo global. Normalmente se evalua en el hipercubo $x_i [-600,600] $. Su minimo global está en <span class="math inline">\(f(0,...,0)=0\)</span></p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p><span class="math display">\[
+\begin{align}
+f(x_1, x_2) = &amp; \left[1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)\right] \\
+         &amp; \left[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)\right]
+\end{align}
+\]</span></p>
+<p>La función Goldstein-Price es una función en 2 dimensiones y tiene varios mínimos locales. Segun <span class="citation" data-cites="molga2005test">@molga2005test</span>, la función generalmente se evalúa en el cuadrado <span class="math inline">\(x_1 \in [-2, 2]\)</span> y <span class="math inline">\(x_1 \in [-2, 2]\)</span> . Su mínimo global es <span class="math inline">\(f(0,-1) = 3\)</span></p>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<p><span class="math display">\[ f(x_1, x_2) = \left(4 - 2.1x_1^2 + \frac{x_1^4}{3}\right)x_1^2 + x_1x_2 + \left(-4 + 4x_2^2\right)x_2^2 \]</span></p>
+<p>La función de las seis jorobas de camello es una función en 2 dimensiones.Segun <span class="citation" data-cites="molga2005test">@molga2005test</span> la función tiene seis mínimos locales, dos de los cuales son globales y recomienda evaluar la función en el rectángulo <span class="math inline">\(x_1 \in [-3, 3], x_2 \in [-2, 2]\)</span>, donde los mínimos globales son <span class="math inline">\(f(0.0898,-0.7126) = -1.0316\)</span> y <span class="math inline">\(f(-0.0898, 0.7126) = -1.0316\)</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="proceso-de-optimización" class="level2">
+<h2 class="anchored" data-anchor-id="proceso-de-optimización">Proceso de optimización</h2>
+<section id="optimización-por-descenso-del-gradiente" class="level3">
+<h3 class="anchored" data-anchor-id="optimización-por-descenso-del-gradiente">Optimización por descenso del gradiente</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Función de Rosenbrock</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Función de Schwefel</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Función de Griewank</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Función Goldstein-Price</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">Función de las seis jorobas de camello</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p><span class="math display">\[ f(x_1, x_2) = (a - x_1)^2 + b(x_2 - x_1^2)^2 \]</span></p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p><span class="math display">\[ f(x_1,x_2) = 418.9829n - \sum_{i=1}^{2} x_i \sin(\sqrt{|x_i|}) \]</span></p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p><span class="math display">\[ f(x_1,x_2) = 1 + \frac{1}{4000} \sum_{i=1}^{2} x_i^2 - \prod_{i=1}^{2} \cos\left(\frac{x_i}{\sqrt{i}}\right) \]</span></p>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<p><span class="math display">\[
+\begin{align}
+f(x_1, x_2) = &amp; \left[1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)\right] \\
+         &amp; \left[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)\right]
+\end{align}
+\]</span></p>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<p><span class="math display">\[ f(x_1, x_2) = \left(4 - 2.1x_1^2 + \frac{x_1^4}{3}\right)x_1^2 + x_1x_2 + \left(-4 + 4x_2^2\right)x_2^2 \]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="tareas" class="level3">
+<h3 class="anchored" data-anchor-id="tareas">Tareas:</h3>
+<ol type="1">
+<li><strong>Escoja dos funciones de prueba.</strong></li>
+<li><strong>Optimización con método de descenso por gradiente:</strong>
+<ul>
+<li>Optimice las funciones seleccionadas en <strong>dos y tres dimensiones</strong> usando un <strong>método de descenso por gradiente</strong> con condición inicial aleatoria.</li>
+</ul></li>
+<li><strong>Optimización con métodos heurísticos:</strong>
+<ul>
+<li>Optimice las funciones seleccionadas en <strong>dos y tres dimensiones</strong> usando:
+<ul>
+<li>Algoritmos evolutivos.</li>
+<li>Optimización de partículas.</li>
+<li>Evolución diferencial.</li>
+</ul></li>
+</ul></li>
+<li><strong>Representación visual:</strong>
+<ul>
+<li>Cree un <strong>GIF animado</strong> o un <strong>video</strong> que muestre el proceso de optimización usando:
+<ul>
+<li><strong>Descenso por gradiente</strong>.</li>
+<li><strong>Métodos heurísticos</strong>.</li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section id="discusión" class="level3">
+<h3 class="anchored" data-anchor-id="discusión">Discusión:</h3>
+<p>Reflexione sobre los siguientes puntos: - ¿Qué aportaron los métodos de <strong>descenso por gradiente</strong> y qué aportaron los <strong>métodos heurísticos</strong>? - Para responder a esta pregunta, considere: - El <strong>valor final</strong> de la función objetivo. - El <strong>número de evaluaciones</strong> de la función objetivo. - Es posible que se requiera realizar <strong>varias corridas</strong> de los algoritmos para obtener conclusiones significativas.</p>
+</section>
+</section>
+</section>
+<section id="segunda-parte-optimización-combinatoria" class="level1">
+<h1>Segunda parte: Optimización Combinatoria</h1>
+<section id="problema-del-viajero" class="level2">
+<h2 class="anchored" data-anchor-id="problema-del-viajero">Problema del Viajero:</h2>
+<p>Un vendedor debe realizar un recorrido por <strong>todas las capitales</strong> de los <strong>32 estados</strong> de los <strong>Estados Unidos Mexicanos</strong>.</p>
+<section id="tareas-1" class="level3">
+<h3 class="anchored" data-anchor-id="tareas-1">Tareas:</h3>
+<ol type="1">
+<li><strong>Optimización con métodos metaheurísticos:</strong>
+<ul>
+<li>Utilice <strong>colonias de hormigas</strong> para encontrar el orden óptimo del recorrido.</li>
+<li>Utilice <strong>algoritmos genéticos</strong> para encontrar el orden óptimo del recorrido.</li>
+</ul></li>
+<li><strong>Costo del recorrido:</strong>
+<ul>
+<li>El costo de desplazamiento entre ciudades se calcula como la suma de:
+<ul>
+<li>El valor de la <strong>hora del vendedor</strong> (este es un parámetro que debe estudiarse).</li>
+<li>El <strong>costo de los peajes</strong>.</li>
+<li>El <strong>costo del combustible</strong>.</li>
+</ul></li>
+<li>Cada equipo debe definir el <strong>vehículo</strong> que utilizará el vendedor para realizar el recorrido y, con base en esta elección, <strong>calcular el costo del combustible</strong>.</li>
+</ul></li>
+</ol>
+</section>
+<section id="representación-visual" class="level3">
+<h3 class="anchored" data-anchor-id="representación-visual">Representación Visual:</h3>
+<ul>
+<li>Cree un <strong>GIF animado</strong> o un <strong>video</strong> que muestre cómo se comporta la <strong>mejor solución</strong> encontrada, usando un <strong>gráfico del recorrido</strong> en el mapa de México.</li>
+</ul>
+<hr>
+</section>
+<section id="discusión-1" class="level3">
+<h3 class="anchored" data-anchor-id="discusión-1">Discusión:</h3>
+<p>Reflexione sobre: - Los resultados obtenidos con las <strong>colonias de hormigas</strong> y los <strong>algoritmos genéticos</strong>. - Comparación de costos y tiempo de ejecución.</p>
+</section>
+<section id="solución" class="level3">
+<h3 class="anchored" data-anchor-id="solución">Solución:</h3>
+<section id="extracción-datos" class="level4">
+<h4 class="anchored" data-anchor-id="extracción-datos">Extracción datos:</h4>
+<p>Para empezar a solucionar el problema, es necesario obtener información sobre el valor del salario del vendedor, el costo de los peajes, y definir el modelo del automóvil junto con su respectivo gasto de gasolina, para calcular el gasto total destinado al combustible. En todo el proceso de extracción de la información se tomaron las capitales de cada estado como la ciudad de referencia para obtener la información.</p>
+<section id="distancias-y-tiempo-de-conducción" class="level5">
+<h5 class="anchored" data-anchor-id="distancias-y-tiempo-de-conducción">Distancias y tiempo de conducción</h5>
+<p>Podemos obtener la tabla de distancias y tiempo de conducción entre las ciudades, de manera sencilla utilizando el siguiente <a href="https://mx.mejoresrutas.com/">sitio web</a>. Dicho sitio web nos permite obtener la tabla de distancias y la tabla de tiempo de conducción entre las ciudades ingresando el nombre de cada una de ellas.</p>
+</section>
+<section id="peajes" class="level5">
+<h5 class="anchored" data-anchor-id="peajes">Peajes</h5>
+<p>Para obtener la información de los peajes, utilizamos la siguiente <a href="https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta">página</a>, que contiene datos sobre el costo de los peajes para desplazarse entre dos ciudades.</p>
+<p>Debido al gran número de combinaciones posibles, programamos un bot en Selenium que realiza web scraping en dicho sitio, lo que nos permitió automatizar la extracción de la información. A continuación, se muestra el código utilizado para programar el bot.</p>
+<div id="fb768ad1" class="cell" title="Código bot para la extracción de los precios de los peajes" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>driver <span class="op">=</span> webdriver.Chrome()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Navegar a la página web</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>driver.get(<span class="st">'https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Diccionario con estados y sus capitales</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>estados_capitales <span class="op">=</span> {</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Aguascalientes'</span>: <span class="st">'Aguascalientes'</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Baja California'</span>: <span class="st">'Mexicali'</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Baja California Sur'</span>: <span class="st">'La Paz'</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Campeche'</span>: <span class="st">'Campeche'</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Coahuila'</span>: <span class="st">'Saltillo'</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Colima'</span>: <span class="st">'Colima'</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Chiapas'</span>: <span class="st">'Tuxtla Gutiérrez'</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Chihuahua'</span>: <span class="st">'Chihuahua'</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Distrito Federal'</span>: <span class="st">'Cd. De México (Zócalo)'</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Durango'</span>: <span class="st">'Durango'</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guanajuato'</span>: <span class="st">'Guanajuato'</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guerrero'</span>: <span class="st">'Chilpancingo'</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Hidalgo'</span>: <span class="st">'Pachuca'</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Jalisco'</span>: <span class="st">'Guadalajara'</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'México'</span>: <span class="st">'Toluca'</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Michoacán'</span>: <span class="st">'Morelia'</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Morelos'</span>: <span class="st">'Cuernavaca'</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Nayarit'</span>: <span class="st">'Tepic'</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Nuevo León'</span>: <span class="st">'Monterrey'</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Oaxaca'</span>: <span class="st">'Oaxaca'</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Puebla'</span>: <span class="st">'Puebla'</span>,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Querétaro'</span>: <span class="st">'Querétaro'</span>,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Quintana Roo'</span>: <span class="st">'Chetumal'</span>,</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">'San Luis Potosí'</span>: <span class="st">'San Luis Potosí'</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sinaloa'</span>: <span class="st">'Culiacán'</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sonora'</span>: <span class="st">'Hermosillo'</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Tabasco'</span>: <span class="st">'Villahermosa'</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Tamaulipas'</span>: <span class="st">'Cd. Victoria'</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Tlaxcala'</span>: <span class="st">'Tlaxcala'</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Veracruz'</span>: <span class="st">'Xalapa'</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Yucatán'</span>: <span class="st">'Mérida'</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Zacatecas'</span>: <span class="st">'Zacatecas'</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>estados <span class="op">=</span> <span class="bu">list</span>(estados_capitales.keys())</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>matriz_resultados <span class="op">=</span> pd.DataFrame(index<span class="op">=</span>estados, columns<span class="op">=</span>estados)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> estado_origen <span class="kw">in</span> estados:</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> estado_destino <span class="kw">in</span> estados:</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> estado_origen <span class="op">==</span> estado_destino:</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>            select_element_origen <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'edoOrigen'</span>))</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>            select_origen <span class="op">=</span> Select(select_element_origen)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>            select_origen.select_by_visible_text(estado_origen)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>            time.sleep(<span class="dv">2</span>)  </span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>            capital_origen <span class="op">=</span> estados_capitales[estado_origen]</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>            select_element_ciudad_origen <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'ciudadOrigen'</span>))</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>            select_ciudad_origen <span class="op">=</span> Select(select_element_ciudad_origen)</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>            select_ciudad_origen.select_by_visible_text(capital_origen)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>            select_element_destino <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'edoDestino'</span>))</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>            select_destino <span class="op">=</span> Select(select_element_destino)</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>            select_destino.select_by_visible_text(estado_destino)</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>            time.sleep(<span class="dv">2</span>)  </span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>            capital_destino <span class="op">=</span> estados_capitales[estado_destino]</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>            select_element_ciudad_destino <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'ciudadDestino'</span>))</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>            select_ciudad_destino <span class="op">=</span> Select(select_element_ciudad_destino)</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>            select_ciudad_destino.select_by_visible_text(capital_destino)</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>            boton_consultar <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>                EC.element_to_be_clickable((By.NAME, <span class="st">'cmdEnviar'</span>))</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>            boton_consultar.click()</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>            time.sleep(<span class="dv">3</span>)</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>            resultado_element <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.XPATH, <span class="st">'(//tr[@class="tr_gris"])[last()]/td[@align="right"][last()]'</span>))</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>            resultado_texto <span class="op">=</span> resultado_element.text.strip()  <span class="co"># .strip() elimina espacios adicionales</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>            matriz_resultados.at[estado_origen, estado_destino] <span class="op">=</span> resultado_texto</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"De </span><span class="sc">{</span>estado_origen<span class="sc">}</span><span class="ss"> a </span><span class="sc">{</span>estado_destino<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>resultado_texto<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"No se pudo extraer el valor para </span><span class="sc">{</span>estado_origen<span class="sc">}</span><span class="ss"> a </span><span class="sc">{</span>estado_destino<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>            matriz_resultados.at[estado_origen, estado_destino] <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>        driver.get(<span class="st">'https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta'</span>)</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="dv">3</span>)  </span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(matriz_resultados)</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>driver.quit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="definición-gastos" class="level4">
+<h4 class="anchored" data-anchor-id="definición-gastos">Definición gastos:</h4>
+<p>En la siguiente sección definimos los gastos que se deben de consultar, como el salario del vendedor, el modelo del carro y su gasto de combustible.</p>
+<section id="salario-del-vendedor" class="level5">
+<h5 class="anchored" data-anchor-id="salario-del-vendedor">Salario del vendedor</h5>
+<p>Para definir el salario del vendedor, tomaremos como referencia el salario minimo en México, el cual actualmente se encuentra 248,93 pesos diarios, por lo cual, para una jornada de 8 horas, el salario mínimo por hora es de 31,11625, por lo cual definiremos el salario en 35 pesos mexicanos por hora.</p>
+</section>
+<section id="modelo-del-carro-y-gasto-en-gasolina" class="level5">
+<h5 class="anchored" data-anchor-id="modelo-del-carro-y-gasto-en-gasolina">Modelo del carro y gasto en gasolina</h5>
+<p>El modelo de carro que definiremos es un Nissan Versa debido a ser el modelo de carro más vendido actualmente en México, con lo cual permitirá hacer una estimación más justa del costo total de realizar la ruta por los 32 estados mexicanos en el contexto de dicho país.</p>
+<p>En carreteras el rendimiento promedio de este modelo por galón es de 64 kilómetros, además el tipo de gasolina que utiliza, en México se suele llamar “Gasolina Magna” la cual a día del 14 de Noviembre tiene un precio promedio de 23.96 pesos mexicanos por galón.</p>
+</section>
+</section>
+<section id="transformaciones" class="level4">
+<h4 class="anchored" data-anchor-id="transformaciones">Transformaciones</h4>
+<p>Con la información anterior debemos calcular el costo de desplazamiento entre las ciudades, sin embargo, se observa como no toda la información se encuentra en pesos mexicanos, hay información en galones, otra en horas, otra en kilómetros, etc. Por lo cual vamos a realizar las siguientes transformaciones en las unidades para poder sumar toda la información como gasto en pesos mexicanos. Notemos que para el caso de los peajes ya estos estan en pesos mexicanos por lo que no necesitamos cambiar las unidades.</p>
+<section id="tiempo-de-viaje" class="level5">
+<h5 class="anchored" data-anchor-id="tiempo-de-viaje">Tiempo de viaje</h5>
+<p>El costo por el salario del vendedor es calculado como:</p>
+<p>$$ \text{Costo vendedor} = \text{tiempo} \times \text{salario del vendedor} $$</p>
+</section>
+<section id="gasolina-para-el-viaje" class="level5">
+<h5 class="anchored" data-anchor-id="gasolina-para-el-viaje">Gasolina para el viaje</h5>
+<p>El gasto total en gasolina lo calculamos como:</p>
+<p>$$ \text{Costo gasolina} = \left( \frac{\text{Distancia}}{\text{Rendimiento (km/galón)}} \right) \times \text{Precio por galón} $$</p>
+</section>
+</section>
+<section id="gasto-total" class="level4">
+<h4 class="anchored" data-anchor-id="gasto-total">Gasto total</h4>
+<p>Con todo lo realizado anteriormente ya contamos con la información que necesitamos y en las unidades requeridas para sumar todo como pesos mexicanos.</p>
+<p><span class="math display">\[
+\text{Gasto recorrido} = \text{Costo gasolina} + \text{Costo vendedor} + \text{Costo Peajes}
+\]</span></p>
+</section>
+<section id="ruta-óptima" class="level4">
+<h4 class="anchored" data-anchor-id="ruta-óptima">Ruta óptima</h4>
+<p>Ahora con todo en las mismas unidades podemos pasar a utilizar los algortimos de colonia de hormigas y algoritmos genéticos para encontrar la ruta óptima del vendedor a través de los 32 estados de México.</p>
+<section id="colonia-de-hormigas" class="level5">
+<h5 class="anchored" data-anchor-id="colonia-de-hormigas">Colonia de Hormigas</h5>
+<p>Los <strong>algoritmos de colonia de hormigas (Ant Colony Optimization, ACO)</strong> son una técnica de optimización basada en la inteligencia colectiva observada en las colonias de hormigas naturales. Se inspiraron en el comportamiento de las hormigas en la naturaleza para resolver problemas complejos de optimización combinatoria. Los hiperparámetros del modelo son los siguientes:</p>
+<ul>
+<li><p><strong>Cantidad de hormigas:</strong> Cantidad de hormigas que participarán en cada iteración de la búsqueda de soluciones. Influye en la capacidad del algoritmo de explorar diferentes soluciones de manera simultánea. En nuestro caso utilizaremos 32 hormigas, es decir, igual al número de estados en México.</p></li>
+<li><p><strong>Alpha</strong>: Controla la influencia de la feromona en la probabilidad de que una hormiga elija ese camino. A medida que el valor aumenta, las hormigas son más propensas a seguir caminos con más feromona. Utilizamos un valor de 1 para una influencia moderada de las feromonas depositadas.</p></li>
+<li><p><strong>Beta</strong>: Controla la preferencia de las hormigas por caminos más “baratos” o prometedores, lo cual ayuda aumentar la exploración. Utilizamos un valor de 2 ya que buscamos minimizar el costo del viaje.</p></li>
+<li><p><strong>\(\rho\)</strong>: Indica la tasa de evaporación de la feromona, lo cual evita que las soluciones previas influencien las iteraciones futuras. Seleccionamos una tasa de evaporación del 0.5, es decir, el 50% de las feromonas se evaporan en cada iteración.</p></li>
+<li><p><strong>\(Q\)</strong>: Cantidad de feromona depositada por una hormiga en su recorrido tras encontrar una solución. Utilizamos un valor de 100 para indicar la cantidad de feromonas en el camino.</p></li>
+</ul>
+<p>Con los hiperparámetros definidos, podemos pasar a ejecutar el algoritmo de colonia de hormigas. La solución encontrada se puede observar en la Figura</p>
+</section>
+<section id="algoritmo-genético" class="level5">
+<h5 class="anchored" data-anchor-id="algoritmo-genético">Algoritmo genético</h5>
+<p>Los <strong>algoritmos genéticos (Genetic Algorithms, GA)</strong> son una técnica de optimización inspirada en los principios de la selección natural y la evolución biológica. Los GA buscan soluciones óptimas mediante la creación, evaluación y modificación de una población de individuos, representando posibles soluciones a un problema dado. La evolución de la población se realiza mediante operadores genéticos como la mutación. Los hiperparámetros clave del modelo son los siguientes:</p>
+<ul>
+<li><p><strong>Tamaño de la población</strong>: Define el número de individuos en cada generación. Un tamaño de población más grande permite una mejor exploración del espacio de soluciones, pero también aumenta el tiempo de cómputo. En nuestro caso, utilizamos una población de 100 individuos, lo que proporciona un equilibrio adecuado entre diversidad y eficiencia computacional.</p></li>
+<li><p><strong>Número de generaciones</strong>: Especifica cuántas veces se evolucionará la población mediante el proceso de selección, cruce y mutación. Utilizamos 200 generaciones para permitir al algoritmo explorar el espacio de búsqueda y converger hacia una solución óptima o cercana al óptimo.</p></li>
+<li><p><strong>Tasa de mutación</strong>: Representa la probabilidad de que un gen sea modificado aleatoriamente en un individuo. La mutación introduce variación genética, lo que ayuda a explorar nuevas áreas del espacio de búsqueda y a evitar estancamientos en óptimos locales. Utilizamos una tasa de mutación de 0.1 (10%), lo que mantiene una buena cantidad de diversidad sin perturbar excesivamente a la población.</p></li>
+</ul>
+
+
+<!-- -->
+
+</section>
+</section>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Primer trabajo: Optimización heurística"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: "Catalina Restrepo Salgado"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: "Julián Castaño Pineda"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: "Tomás Rodríguez Taborda"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: "Luis Andrés Altamar Romero"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2024-11-15"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [optimización, algoritmos genéticos, colonia de hormigas, webscrapping]</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "image.jpg"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Primera parte: Optimización Numérica</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>El objetivo de esta sección es evaluar diversos métodos de optimización aplicados a varias funciones, con el fin de medir su rendimiento. En particular, se utilizarán las funciones de Rosenbrock, Schwefel, Griewank, Goldstein-Price y la función de las seis jorobas de camello. Estas funciones serán optimizadas mediante el método del gradiente descendente y tres algoritmos heurísticos: Algoritmos Evolutivos, Optimización por Enjambre de Partículas y Evolución Diferencial.</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>Al final, se comentará sobre los aportes de los métodos de descenso por gradiente y los métodos heurísticos, considerando el valor final de la función objetivo y el número de evaluaciones de la función objetivo, en un entorno de simulación con varios parámetros y condiciones para garantizar conclusiones significativas.</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Funciones a optimizar</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="fu">### Función de Rosenbrock</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>$$f(\mathbf{x}) = \sum_{i=1}^{d-1} \left<span class="co">[</span><span class="ot"> 100(x_{i+1} - x_i^2)^2 + (x_i - 1)^2 \right</span><span class="co">]</span>$$</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>En 2 dimensiones se puede definir como $$ f(x_1, x_2) = (a - x_1)^2 + b(x_2 - x_1^2)^2 $$</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>La Función de Rosenbrock, también conocida como función del valle o del plátano, es ampliamente utilizada para evaluar algoritmos de optimización basados en gradientes. Esta función es unimodal y presenta su mínimo global en un valle parabólico estrecho, lo que facilita su localización. Sin embargo, segun @simonfraser_rosenbrock citando a @picheny2012benchmark convergencia hacia este mínimo puede ser desafiante debido a la naturaleza del valle.</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>La función se evalúa generalmente en el hipercubo $x_i \in <span class="co">[</span><span class="ot">-5, 10</span><span class="co">]</span>$ y tiene un mínimo global en $f(1,...,1) = 0$</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="fu">### Función de Rastrigin</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>$$f(\mathbf{x}) = 10d + \sum_{i=1}^{d} \left<span class="co">[</span><span class="ot"> x_i^2 - 10 \cos(2\pi x_i) \right</span><span class="co">]</span>$$</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>Segun @simonfraser_rosenbroc, la función de Rastrigin tiene varios mínimos locales. Es altamente multimodal, pero las ubicaciones de los mínimos se distribuyen regularmente. La función generalmente se evalúa en el hipercubo $x_i \in <span class="co">[</span><span class="ot">-5.12, 5.12</span><span class="co">]</span>$ y su mínimo local se encuentra en $f(0,...,0)=0$.</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="fu">### Función de Schwefel</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>$$ f(\mathbf{x}) = 418.9829d - \sum_{i=1}^{d} x_i \sin(\sqrt{|x_i|}) $$</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>Segun @simonfraser_rosenbrock La función de Schwefel es compleja, con muchos mínimos locales. Normalmente se evalua en el hipercubo \$x_i \in <span class="sc">\[</span>-500,500<span class="sc">\]</span> \$. Su minimo global está en $f(420.9687,...,420.9687)=0$</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### Función de Griewank</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>$$ f(\mathbf{x}) = 1 + \frac{1}{4000} \sum_{i=1}^{d} x_i^2 - \prod_{i=1}^{d} \cos\left(\frac{x_i}{\sqrt{i}}\right) $$</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>Segun @simonfraser_rosenbrock la función de Griewank tiene muchos mínimos locales generalizados, que se distribuyen de forma regular. Lo que hace compleja su optimización al minimo global. Normalmente se evalua en el hipercubo \$x_i \in <span class="sc">\[</span>-600,600<span class="sc">\]</span> \$. Su minimo global está en $f(0,...,0)=0$</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="fu">### Función Goldstein-Price</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>\begin{align}</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>f(x_1, x_2) = &amp; \left<span class="co">[</span><span class="ot">1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)\right</span><span class="co">]</span> <span class="sc">\\</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>         &amp; \left<span class="co">[</span><span class="ot">30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)\right</span><span class="co">]</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>\end{align}</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>La función Goldstein-Price es una función en 2 dimensiones y tiene varios mínimos locales. Segun @molga2005test, la función generalmente se evalúa en el cuadrado $x_1 \in <span class="co">[</span><span class="ot">-2, 2</span><span class="co">]</span>$ y $x_1 \in <span class="co">[</span><span class="ot">-2, 2</span><span class="co">]</span>$ . Su mínimo global es $f(0,-1) = 3$</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="fu">### Función de las seis jorobas de camello</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>$$ f(x_1, x_2) = \left(4 - 2.1x_1^2 + \frac{x_1^4}{3}\right)x_1^2 + x_1x_2 + \left(-4 + 4x_2^2\right)x_2^2 $$</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>La función de las seis jorobas de camello es una función en 2 dimensiones.Segun @molga2005test la función tiene seis mínimos locales, dos de los cuales son globales y recomienda evaluar la función en el rectángulo $x_1 \in <span class="co">[</span><span class="ot">-3, 3</span><span class="co">]</span>, x_2 \in <span class="co">[</span><span class="ot">-2, 2</span><span class="co">]</span>$, donde los mínimos globales son $f(0.0898,-0.7126) = -1.0316$ y $f(-0.0898, 0.7126) = -1.0316$</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## Proceso de optimización</span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a><span class="fu">### Optimización por descenso del gradiente</span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Función de Rosenbrock</span></span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>$$ f(x_1, x_2) = (a - x_1)^2 + b(x_2 - x_1^2)^2 $$</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Función de Schwefel</span></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>$$ f(x_1,x_2) = 418.9829n - \sum_{i=1}^{2} x_i \sin(\sqrt{|x_i|}) $$</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Función de Griewank</span></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>$$ f(x_1,x_2) = 1 + \frac{1}{4000} \sum_{i=1}^{2} x_i^2 - \prod_{i=1}^{2} \cos\left(\frac{x_i}{\sqrt{i}}\right) $$</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Función Goldstein-Price</span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>\begin{align}</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>f(x_1, x_2) = &amp; \left<span class="co">[</span><span class="ot">1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)\right</span><span class="co">]</span> <span class="sc">\\</span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>         &amp; \left<span class="co">[</span><span class="ot">30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)\right</span><span class="co">]</span></span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>\end{align}</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Función de las seis jorobas de camello</span></span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>$$ f(x_1, x_2) = \left(4 - 2.1x_1^2 + \frac{x_1^4}{3}\right)x_1^2 + x_1x_2 + \left(-4 + 4x_2^2\right)x_2^2 $$</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tareas:</span></span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Escoja dos funciones de prueba.**</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Optimización con método de descenso por gradiente:**</span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Optimice las funciones seleccionadas en **dos y tres dimensiones** usando un **método de descenso por gradiente** con condición inicial aleatoria.</span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Optimización con métodos heurísticos:**</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Optimice las funciones seleccionadas en **dos y tres dimensiones** usando:</span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>Algoritmos evolutivos.</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>Optimización de partículas.</span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>Evolución diferencial.</span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>**Representación visual:**</span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Cree un **GIF animado** o un **video** que muestre el proceso de optimización usando:</span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>**Descenso por gradiente**.</span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>**Métodos heurísticos**.</span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a><span class="fu">### Discusión:</span></span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>Reflexione sobre los siguientes puntos: - ¿Qué aportaron los métodos de **descenso por gradiente** y qué aportaron los **métodos heurísticos**? - Para responder a esta pregunta, considere: - El **valor final** de la función objetivo. - El **número de evaluaciones** de la función objetivo. - Es posible que se requiera realizar **varias corridas** de los algoritmos para obtener conclusiones significativas.</span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a><span class="fu"># Segunda parte: Optimización Combinatoria</span></span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a><span class="fu">## Problema del Viajero:</span></span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>Un vendedor debe realizar un recorrido por **todas las capitales** de los **32 estados** de los **Estados Unidos Mexicanos**.</span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tareas:</span></span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Optimización con métodos metaheurísticos:**</span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Utilice **colonias de hormigas** para encontrar el orden óptimo del recorrido.</span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Utilice **algoritmos genéticos** para encontrar el orden óptimo del recorrido.</span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Costo del recorrido:**</span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>El costo de desplazamiento entre ciudades se calcula como la suma de:</span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>El valor de la **hora del vendedor** (este es un parámetro que debe estudiarse).</span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>El **costo de los peajes**.</span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>El **costo del combustible**.</span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Cada equipo debe definir el **vehículo** que utilizará el vendedor para realizar el recorrido y, con base en esta elección, **calcular el costo del combustible**.</span>
+<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a><span class="fu">### Representación Visual:</span></span>
+<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Cree un **GIF animado** o un **video** que muestre cómo se comporta la **mejor solución** encontrada, usando un **gráfico del recorrido** en el mapa de México.</span>
+<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a><span class="fu">### Discusión:</span></span>
+<span id="cb3-151"><a href="#cb3-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a>Reflexione sobre: - Los resultados obtenidos con las **colonias de hormigas** y los **algoritmos genéticos**. - Comparación de costos y tiempo de ejecución.</span>
+<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a><span class="fu">### Solución:</span></span>
+<span id="cb3-155"><a href="#cb3-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-156"><a href="#cb3-156" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Extracción datos:</span></span>
+<span id="cb3-157"><a href="#cb3-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-158"><a href="#cb3-158" aria-hidden="true" tabindex="-1"></a>Para empezar a solucionar el problema, es necesario obtener información sobre el valor del salario del vendedor, el costo de los peajes, y definir el modelo del automóvil junto con su respectivo gasto de gasolina, para calcular el gasto total destinado al combustible. En todo el proceso de extracción de la información se tomaron las capitales de cada estado como la ciudad de referencia para obtener la información.</span>
+<span id="cb3-159"><a href="#cb3-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-160"><a href="#cb3-160" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Distancias y tiempo de conducción</span></span>
+<span id="cb3-161"><a href="#cb3-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-162"><a href="#cb3-162" aria-hidden="true" tabindex="-1"></a>Podemos obtener la tabla de distancias y tiempo de conducción entre las ciudades, de manera sencilla utilizando el siguiente <span class="co">[</span><span class="ot">sitio web</span><span class="co">](https://mx.mejoresrutas.com/)</span>. Dicho sitio web nos permite obtener la tabla de distancias y la tabla de tiempo de conducción entre las ciudades ingresando el nombre de cada una de ellas.</span>
+<span id="cb3-163"><a href="#cb3-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-164"><a href="#cb3-164" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Peajes</span></span>
+<span id="cb3-165"><a href="#cb3-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-166"><a href="#cb3-166" aria-hidden="true" tabindex="-1"></a>Para obtener la información de los peajes, utilizamos la siguiente <span class="co">[</span><span class="ot">página</span><span class="co">](https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta)</span>, que contiene datos sobre el costo de los peajes para desplazarse entre dos ciudades.</span>
+<span id="cb3-167"><a href="#cb3-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-168"><a href="#cb3-168" aria-hidden="true" tabindex="-1"></a>Debido al gran número de combinaciones posibles, programamos un bot en Selenium que realiza web scraping en dicho sitio, lo que nos permitió automatizar la extracción de la información. A continuación, se muestra el código utilizado para programar el bot.</span>
+<span id="cb3-169"><a href="#cb3-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-172"><a href="#cb3-172" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb3-173"><a href="#cb3-173" aria-hidden="true" tabindex="-1"></a><span class="co">#| title: "Código bot para la extracción de los precios de los peajes"</span></span>
+<span id="cb3-174"><a href="#cb3-174" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb3-175"><a href="#cb3-175" aria-hidden="true" tabindex="-1"></a>driver <span class="op">=</span> webdriver.Chrome()</span>
+<span id="cb3-176"><a href="#cb3-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-177"><a href="#cb3-177" aria-hidden="true" tabindex="-1"></a><span class="co"># Navegar a la página web</span></span>
+<span id="cb3-178"><a href="#cb3-178" aria-hidden="true" tabindex="-1"></a>driver.get(<span class="st">'https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta'</span>)</span>
+<span id="cb3-179"><a href="#cb3-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-180"><a href="#cb3-180" aria-hidden="true" tabindex="-1"></a><span class="co"># Diccionario con estados y sus capitales</span></span>
+<span id="cb3-181"><a href="#cb3-181" aria-hidden="true" tabindex="-1"></a>estados_capitales <span class="op">=</span> {</span>
+<span id="cb3-182"><a href="#cb3-182" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Aguascalientes'</span>: <span class="st">'Aguascalientes'</span>,</span>
+<span id="cb3-183"><a href="#cb3-183" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Baja California'</span>: <span class="st">'Mexicali'</span>,</span>
+<span id="cb3-184"><a href="#cb3-184" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Baja California Sur'</span>: <span class="st">'La Paz'</span>,</span>
+<span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Campeche'</span>: <span class="st">'Campeche'</span>,</span>
+<span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Coahuila'</span>: <span class="st">'Saltillo'</span>,</span>
+<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Colima'</span>: <span class="st">'Colima'</span>,</span>
+<span id="cb3-188"><a href="#cb3-188" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Chiapas'</span>: <span class="st">'Tuxtla Gutiérrez'</span>,</span>
+<span id="cb3-189"><a href="#cb3-189" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Chihuahua'</span>: <span class="st">'Chihuahua'</span>,</span>
+<span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Distrito Federal'</span>: <span class="st">'Cd. De México (Zócalo)'</span>,</span>
+<span id="cb3-191"><a href="#cb3-191" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Durango'</span>: <span class="st">'Durango'</span>,</span>
+<span id="cb3-192"><a href="#cb3-192" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guanajuato'</span>: <span class="st">'Guanajuato'</span>,</span>
+<span id="cb3-193"><a href="#cb3-193" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guerrero'</span>: <span class="st">'Chilpancingo'</span>,</span>
+<span id="cb3-194"><a href="#cb3-194" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Hidalgo'</span>: <span class="st">'Pachuca'</span>,</span>
+<span id="cb3-195"><a href="#cb3-195" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Jalisco'</span>: <span class="st">'Guadalajara'</span>,</span>
+<span id="cb3-196"><a href="#cb3-196" aria-hidden="true" tabindex="-1"></a>    <span class="st">'México'</span>: <span class="st">'Toluca'</span>,</span>
+<span id="cb3-197"><a href="#cb3-197" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Michoacán'</span>: <span class="st">'Morelia'</span>,</span>
+<span id="cb3-198"><a href="#cb3-198" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Morelos'</span>: <span class="st">'Cuernavaca'</span>,</span>
+<span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Nayarit'</span>: <span class="st">'Tepic'</span>,</span>
+<span id="cb3-200"><a href="#cb3-200" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Nuevo León'</span>: <span class="st">'Monterrey'</span>,</span>
+<span id="cb3-201"><a href="#cb3-201" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Oaxaca'</span>: <span class="st">'Oaxaca'</span>,</span>
+<span id="cb3-202"><a href="#cb3-202" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Puebla'</span>: <span class="st">'Puebla'</span>,</span>
+<span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Querétaro'</span>: <span class="st">'Querétaro'</span>,</span>
+<span id="cb3-204"><a href="#cb3-204" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Quintana Roo'</span>: <span class="st">'Chetumal'</span>,</span>
+<span id="cb3-205"><a href="#cb3-205" aria-hidden="true" tabindex="-1"></a>    <span class="st">'San Luis Potosí'</span>: <span class="st">'San Luis Potosí'</span>,</span>
+<span id="cb3-206"><a href="#cb3-206" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sinaloa'</span>: <span class="st">'Culiacán'</span>,</span>
+<span id="cb3-207"><a href="#cb3-207" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Sonora'</span>: <span class="st">'Hermosillo'</span>,</span>
+<span id="cb3-208"><a href="#cb3-208" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Tabasco'</span>: <span class="st">'Villahermosa'</span>,</span>
+<span id="cb3-209"><a href="#cb3-209" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Tamaulipas'</span>: <span class="st">'Cd. Victoria'</span>,</span>
+<span id="cb3-210"><a href="#cb3-210" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Tlaxcala'</span>: <span class="st">'Tlaxcala'</span>,</span>
+<span id="cb3-211"><a href="#cb3-211" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Veracruz'</span>: <span class="st">'Xalapa'</span>,</span>
+<span id="cb3-212"><a href="#cb3-212" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Yucatán'</span>: <span class="st">'Mérida'</span>,</span>
+<span id="cb3-213"><a href="#cb3-213" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Zacatecas'</span>: <span class="st">'Zacatecas'</span></span>
+<span id="cb3-214"><a href="#cb3-214" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-215"><a href="#cb3-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-216"><a href="#cb3-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-217"><a href="#cb3-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-218"><a href="#cb3-218" aria-hidden="true" tabindex="-1"></a>estados <span class="op">=</span> <span class="bu">list</span>(estados_capitales.keys())</span>
+<span id="cb3-219"><a href="#cb3-219" aria-hidden="true" tabindex="-1"></a>matriz_resultados <span class="op">=</span> pd.DataFrame(index<span class="op">=</span>estados, columns<span class="op">=</span>estados)</span>
+<span id="cb3-220"><a href="#cb3-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-221"><a href="#cb3-221" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> estado_origen <span class="kw">in</span> estados:</span>
+<span id="cb3-222"><a href="#cb3-222" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> estado_destino <span class="kw">in</span> estados:</span>
+<span id="cb3-223"><a href="#cb3-223" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> estado_origen <span class="op">==</span> estado_destino:</span>
+<span id="cb3-224"><a href="#cb3-224" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb3-225"><a href="#cb3-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-226"><a href="#cb3-226" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a>            select_element_origen <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb3-228"><a href="#cb3-228" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'edoOrigen'</span>))</span>
+<span id="cb3-229"><a href="#cb3-229" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-230"><a href="#cb3-230" aria-hidden="true" tabindex="-1"></a>            select_origen <span class="op">=</span> Select(select_element_origen)</span>
+<span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a>            select_origen.select_by_visible_text(estado_origen)</span>
+<span id="cb3-232"><a href="#cb3-232" aria-hidden="true" tabindex="-1"></a>            time.sleep(<span class="dv">2</span>)  </span>
+<span id="cb3-233"><a href="#cb3-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-234"><a href="#cb3-234" aria-hidden="true" tabindex="-1"></a>            capital_origen <span class="op">=</span> estados_capitales[estado_origen]</span>
+<span id="cb3-235"><a href="#cb3-235" aria-hidden="true" tabindex="-1"></a>            select_element_ciudad_origen <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'ciudadOrigen'</span>))</span>
+<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a>            select_ciudad_origen <span class="op">=</span> Select(select_element_ciudad_origen)</span>
+<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a>            select_ciudad_origen.select_by_visible_text(capital_origen)</span>
+<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a>            select_element_destino <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'edoDestino'</span>))</span>
+<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a>            select_destino <span class="op">=</span> Select(select_element_destino)</span>
+<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a>            select_destino.select_by_visible_text(estado_destino)</span>
+<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a>            time.sleep(<span class="dv">2</span>)  </span>
+<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a>            capital_destino <span class="op">=</span> estados_capitales[estado_destino]</span>
+<span id="cb3-249"><a href="#cb3-249" aria-hidden="true" tabindex="-1"></a>            select_element_ciudad_destino <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb3-250"><a href="#cb3-250" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.NAME, <span class="st">'ciudadDestino'</span>))</span>
+<span id="cb3-251"><a href="#cb3-251" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-252"><a href="#cb3-252" aria-hidden="true" tabindex="-1"></a>            select_ciudad_destino <span class="op">=</span> Select(select_element_ciudad_destino)</span>
+<span id="cb3-253"><a href="#cb3-253" aria-hidden="true" tabindex="-1"></a>            select_ciudad_destino.select_by_visible_text(capital_destino)</span>
+<span id="cb3-254"><a href="#cb3-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-255"><a href="#cb3-255" aria-hidden="true" tabindex="-1"></a>            boton_consultar <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb3-256"><a href="#cb3-256" aria-hidden="true" tabindex="-1"></a>                EC.element_to_be_clickable((By.NAME, <span class="st">'cmdEnviar'</span>))</span>
+<span id="cb3-257"><a href="#cb3-257" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-258"><a href="#cb3-258" aria-hidden="true" tabindex="-1"></a>            boton_consultar.click()</span>
+<span id="cb3-259"><a href="#cb3-259" aria-hidden="true" tabindex="-1"></a>            time.sleep(<span class="dv">3</span>)</span>
+<span id="cb3-260"><a href="#cb3-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-261"><a href="#cb3-261" aria-hidden="true" tabindex="-1"></a>            resultado_element <span class="op">=</span> WebDriverWait(driver, <span class="dv">10</span>).until(</span>
+<span id="cb3-262"><a href="#cb3-262" aria-hidden="true" tabindex="-1"></a>                EC.presence_of_element_located((By.XPATH, <span class="st">'(//tr[@class="tr_gris"])[last()]/td[@align="right"][last()]'</span>))</span>
+<span id="cb3-263"><a href="#cb3-263" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-264"><a href="#cb3-264" aria-hidden="true" tabindex="-1"></a>            resultado_texto <span class="op">=</span> resultado_element.text.strip()  <span class="co"># .strip() elimina espacios adicionales</span></span>
+<span id="cb3-265"><a href="#cb3-265" aria-hidden="true" tabindex="-1"></a>            matriz_resultados.at[estado_origen, estado_destino] <span class="op">=</span> resultado_texto</span>
+<span id="cb3-266"><a href="#cb3-266" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"De </span><span class="sc">{</span>estado_origen<span class="sc">}</span><span class="ss"> a </span><span class="sc">{</span>estado_destino<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>resultado_texto<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-267"><a href="#cb3-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-268"><a href="#cb3-268" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb3-269"><a href="#cb3-269" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"No se pudo extraer el valor para </span><span class="sc">{</span>estado_origen<span class="sc">}</span><span class="ss"> a </span><span class="sc">{</span>estado_destino<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-270"><a href="#cb3-270" aria-hidden="true" tabindex="-1"></a>            matriz_resultados.at[estado_origen, estado_destino] <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb3-271"><a href="#cb3-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-272"><a href="#cb3-272" aria-hidden="true" tabindex="-1"></a>        driver.get(<span class="st">'https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta'</span>)</span>
+<span id="cb3-273"><a href="#cb3-273" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="dv">3</span>)  </span>
+<span id="cb3-274"><a href="#cb3-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-275"><a href="#cb3-275" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(matriz_resultados)</span>
+<span id="cb3-276"><a href="#cb3-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-277"><a href="#cb3-277" aria-hidden="true" tabindex="-1"></a>driver.quit()</span>
+<span id="cb3-278"><a href="#cb3-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-279"><a href="#cb3-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-280"><a href="#cb3-280" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Definición gastos:</span></span>
+<span id="cb3-281"><a href="#cb3-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-282"><a href="#cb3-282" aria-hidden="true" tabindex="-1"></a>En la siguiente sección definimos los gastos que se deben de consultar, como el salario del vendedor, el modelo del carro y su gasto de combustible.</span>
+<span id="cb3-283"><a href="#cb3-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-284"><a href="#cb3-284" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Salario del vendedor</span></span>
+<span id="cb3-285"><a href="#cb3-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-286"><a href="#cb3-286" aria-hidden="true" tabindex="-1"></a>Para definir el salario del vendedor, tomaremos como referencia el salario minimo en México, el cual actualmente se encuentra 248,93 pesos diarios, por lo cual, para una jornada de 8 horas, el salario mínimo por hora es de 31,11625, por lo cual definiremos el salario en 35 pesos mexicanos por hora.</span>
+<span id="cb3-287"><a href="#cb3-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-288"><a href="#cb3-288" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Modelo del carro y gasto en gasolina</span></span>
+<span id="cb3-289"><a href="#cb3-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-290"><a href="#cb3-290" aria-hidden="true" tabindex="-1"></a>El modelo de carro que definiremos es un Nissan Versa debido a ser el modelo de carro más vendido actualmente en México, con lo cual permitirá hacer una estimación más justa del costo total de realizar la ruta por los 32 estados mexicanos en el contexto de dicho país.</span>
+<span id="cb3-291"><a href="#cb3-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-292"><a href="#cb3-292" aria-hidden="true" tabindex="-1"></a>En carreteras el rendimiento promedio de este modelo por galón es de 64 kilómetros, además el tipo de gasolina que utiliza, en México se suele llamar "Gasolina Magna" la cual a día del 14 de Noviembre tiene un precio promedio de 23.96 pesos mexicanos por galón.</span>
+<span id="cb3-293"><a href="#cb3-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-294"><a href="#cb3-294" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Transformaciones</span></span>
+<span id="cb3-295"><a href="#cb3-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-296"><a href="#cb3-296" aria-hidden="true" tabindex="-1"></a>Con la información anterior debemos calcular el costo de desplazamiento entre las ciudades, sin embargo, se observa como no toda la información se encuentra en pesos mexicanos, hay información en galones, otra en horas, otra en kilómetros, etc. Por lo cual vamos a realizar las siguientes transformaciones en las unidades para poder sumar toda la información como gasto en pesos mexicanos. Notemos que para el caso de los peajes ya estos estan en pesos mexicanos por lo que no necesitamos cambiar las unidades.</span>
+<span id="cb3-297"><a href="#cb3-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-298"><a href="#cb3-298" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Tiempo de viaje</span></span>
+<span id="cb3-299"><a href="#cb3-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-300"><a href="#cb3-300" aria-hidden="true" tabindex="-1"></a>El costo por el salario del vendedor es calculado como:</span>
+<span id="cb3-301"><a href="#cb3-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-302"><a href="#cb3-302" aria-hidden="true" tabindex="-1"></a>\$\$ <span class="sc">\\</span>text{Costo vendedor} = <span class="sc">\\</span>text{tiempo} <span class="sc">\\</span>times <span class="sc">\\</span>text{salario del vendedor} \$\$</span>
+<span id="cb3-303"><a href="#cb3-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-304"><a href="#cb3-304" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Gasolina para el viaje</span></span>
+<span id="cb3-305"><a href="#cb3-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-306"><a href="#cb3-306" aria-hidden="true" tabindex="-1"></a>El gasto total en gasolina lo calculamos como:</span>
+<span id="cb3-307"><a href="#cb3-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-308"><a href="#cb3-308" aria-hidden="true" tabindex="-1"></a>\$\$ <span class="sc">\\</span>text{Costo gasolina} = <span class="sc">\\</span>left( <span class="sc">\\</span>frac{<span class="sc">\\</span>text{Distancia}}{<span class="sc">\\</span>text{Rendimiento (km/galón)}} <span class="sc">\\</span>right) <span class="sc">\\</span>times <span class="sc">\\</span>text{Precio por galón} \$\$</span>
+<span id="cb3-309"><a href="#cb3-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-310"><a href="#cb3-310" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Gasto total</span></span>
+<span id="cb3-311"><a href="#cb3-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-312"><a href="#cb3-312" aria-hidden="true" tabindex="-1"></a>Con todo lo realizado anteriormente ya contamos con la información que necesitamos y en las unidades requeridas para sumar todo como pesos mexicanos.</span>
+<span id="cb3-313"><a href="#cb3-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-314"><a href="#cb3-314" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb3-315"><a href="#cb3-315" aria-hidden="true" tabindex="-1"></a>\text{Gasto recorrido} = \text{Costo gasolina} + \text{Costo vendedor} + \text{Costo Peajes}</span>
+<span id="cb3-316"><a href="#cb3-316" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb3-317"><a href="#cb3-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-318"><a href="#cb3-318" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Ruta óptima</span></span>
+<span id="cb3-319"><a href="#cb3-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-320"><a href="#cb3-320" aria-hidden="true" tabindex="-1"></a>Ahora con todo en las mismas unidades podemos pasar a utilizar los algortimos de colonia de hormigas y algoritmos genéticos para encontrar la ruta óptima del vendedor a través de los 32 estados de México.</span>
+<span id="cb3-321"><a href="#cb3-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-322"><a href="#cb3-322" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Colonia de Hormigas</span></span>
+<span id="cb3-323"><a href="#cb3-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-324"><a href="#cb3-324" aria-hidden="true" tabindex="-1"></a>Los **algoritmos de colonia de hormigas (Ant Colony Optimization, ACO)** son una técnica de optimización basada en la inteligencia colectiva observada en las colonias de hormigas naturales. Se inspiraron en el comportamiento de las hormigas en la naturaleza para resolver problemas complejos de optimización combinatoria. Los hiperparámetros del modelo son los siguientes:</span>
+<span id="cb3-325"><a href="#cb3-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-326"><a href="#cb3-326" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Cantidad de hormigas:** Cantidad de hormigas que participarán en cada iteración de la búsqueda de soluciones. Influye en la capacidad del algoritmo de explorar diferentes soluciones de manera simultánea. En nuestro caso utilizaremos 32 hormigas, es decir, igual al número de estados en México.</span>
+<span id="cb3-327"><a href="#cb3-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-328"><a href="#cb3-328" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Alpha**: Controla la influencia de la feromona en la probabilidad de que una hormiga elija ese camino. A medida que el valor aumenta, las hormigas son más propensas a seguir caminos con más feromona. Utilizamos un valor de 1 para una influencia moderada de las feromonas depositadas.</span>
+<span id="cb3-329"><a href="#cb3-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-330"><a href="#cb3-330" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Beta**: Controla la preferencia de las hormigas por caminos más "baratos" o prometedores, lo cual ayuda aumentar la exploración. Utilizamos un valor de 2 ya que buscamos minimizar el costo del viaje.</span>
+<span id="cb3-331"><a href="#cb3-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-332"><a href="#cb3-332" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**\\(\\rho\\)**: Indica la tasa de evaporación de la feromona, lo cual evita que las soluciones previas influencien las iteraciones futuras. Seleccionamos una tasa de evaporación del 0.5, es decir, el 50% de las feromonas se evaporan en cada iteración.</span>
+<span id="cb3-333"><a href="#cb3-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-334"><a href="#cb3-334" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**\\(Q\\)**: Cantidad de feromona depositada por una hormiga en su recorrido tras encontrar una solución. Utilizamos un valor de 100 para indicar la cantidad de feromonas en el camino.</span>
+<span id="cb3-335"><a href="#cb3-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-336"><a href="#cb3-336" aria-hidden="true" tabindex="-1"></a>Con los hiperparámetros definidos, podemos pasar a ejecutar el algoritmo de colonia de hormigas. La solución encontrada se puede observar en la Figura</span>
+<span id="cb3-337"><a href="#cb3-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-338"><a href="#cb3-338" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Algoritmo genético</span></span>
+<span id="cb3-339"><a href="#cb3-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-340"><a href="#cb3-340" aria-hidden="true" tabindex="-1"></a>Los **algoritmos genéticos (Genetic Algorithms, GA)** son una técnica de optimización inspirada en los principios de la selección natural y la evolución biológica. Los GA buscan soluciones óptimas mediante la creación, evaluación y modificación de una población de individuos, representando posibles soluciones a un problema dado. La evolución de la población se realiza mediante operadores genéticos como la mutación. Los hiperparámetros clave del modelo son los siguientes:</span>
+<span id="cb3-341"><a href="#cb3-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-342"><a href="#cb3-342" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Tamaño de la población**: Define el número de individuos en cada generación. Un tamaño de población más grande permite una mejor exploración del espacio de soluciones, pero también aumenta el tiempo de cómputo. En nuestro caso, utilizamos una población de 100 individuos, lo que proporciona un equilibrio adecuado entre diversidad y eficiencia computacional.</span>
+<span id="cb3-343"><a href="#cb3-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-344"><a href="#cb3-344" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Número de generaciones**: Especifica cuántas veces se evolucionará la población mediante el proceso de selección, cruce y mutación. Utilizamos 200 generaciones para permitir al algoritmo explorar el espacio de búsqueda y converger hacia una solución óptima o cercana al óptimo.</span>
+<span id="cb3-345"><a href="#cb3-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-346"><a href="#cb3-346" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Tasa de mutación**: Representa la probabilidad de que un gen sea modificado aleatoriamente en un individuo. La mutación introduce variación genética, lo que ayuda a explorar nuevas áreas del espacio de búsqueda y a evitar estancamientos en óptimos locales. Utilizamos una tasa de mutación de 0.1 (10%), lo que mantiene una buena cantidad de diversidad sin perturbar excesivamente a la población.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

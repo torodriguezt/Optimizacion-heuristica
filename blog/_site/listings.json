@@ -2,7 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/heuristic-optimization/index.html",
+      "/posts/post-with-code/funciones.html",
+      "/posts/post-with-code/index.html",
       "/posts/welcome/index.html"
     ]
   }

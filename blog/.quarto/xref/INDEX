@@ -1,17 +1,14 @@
 {
   "index.qmd": {
-    "index.html": "2e9d6e3d"
+    "index.html": "92568d14"
   },
-  "about.qmd": {
-    "about.html": "c4d722ea"
+  "posts/post-with-code/funciones.ipynb": {
+    "funciones.html": "243d32de"
   },
   "posts/post-with-code/index.qmd": {
-    "index.html": "e3d7ec55"
+    "index.html": "7ff1fd9b"
   },
   "posts/welcome/index.qmd": {
-    "index.html": "7c6ac1e7"
-  },
-  "posts/heuristic-optimization/index.qmd": {
-    "index.html": "69dcaad3"
+    "index.html": "6d26d6ba"
   }
 }

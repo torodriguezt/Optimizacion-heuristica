@@ -1,0 +1,342 @@
+---
+title: "Primer trabajo: Optimización heurística"
+author:
+  - name: "Catalina Restrepo Salgado"
+  - name: "Julián Castaño Pineda"
+  - name: "Tomás Rodríguez Taborda"
+  - name: "Luis Andrés Altamar Romero"
+date: "2024-11-15"
+categories: [optimización, algoritmos genéticos, colonia de hormigas, webscrapping]
+image: "image.jpg"
+---
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+```
+
+# Primera parte: Optimización Numérica
+
+El objetivo de esta sección es evaluar diversos métodos de optimización aplicados a varias funciones, con el fin de medir su rendimiento. En particular, se utilizarán las funciones de Rosenbrock, Schwefel, Griewank, Goldstein-Price y la función de las seis jorobas de camello. Estas funciones serán optimizadas mediante el método del gradiente descendente y tres algoritmos heurísticos: Algoritmos Evolutivos, Optimización por Enjambre de Partículas y Evolución Diferencial.
+
+Al final, se comentará sobre los aportes de los métodos de descenso por gradiente y los métodos heurísticos, considerando el valor final de la función objetivo y el número de evaluaciones de la función objetivo, en un entorno de simulación con varios parámetros y condiciones para garantizar conclusiones significativas.
+
+## Funciones a optimizar
+
+::: panel-tabset
+### Función de Rosenbrock
+
+$$f(\mathbf{x}) = \sum_{i=1}^{d-1} \left[ 100(x_{i+1} - x_i^2)^2 + (x_i - 1)^2 \right]$$
+
+En 2 dimensiones se puede definir como $$ f(x_1, x_2) = (a - x_1)^2 + b(x_2 - x_1^2)^2 $$
+
+La Función de Rosenbrock, también conocida como función del valle o del plátano, es ampliamente utilizada para evaluar algoritmos de optimización basados en gradientes. Esta función es unimodal y presenta su mínimo global en un valle parabólico estrecho, lo que facilita su localización. Sin embargo, segun @simonfraser_rosenbrock citando a @picheny2012benchmark convergencia hacia este mínimo puede ser desafiante debido a la naturaleza del valle.
+
+La función se evalúa generalmente en el hipercubo $x_i \in [-5, 10]$ y tiene un mínimo global en $f(1,...,1) = 0$
+
+### Función de Rastrigin
+
+$$f(\mathbf{x}) = 10d + \sum_{i=1}^{d} \left[ x_i^2 - 10 \cos(2\pi x_i) \right]$$
+
+Segun @simonfraser_rosenbroc, la función de Rastrigin tiene varios mínimos locales. Es altamente multimodal, pero las ubicaciones de los mínimos se distribuyen regularmente. La función generalmente se evalúa en el hipercubo $x_i \in [-5.12, 5.12]$ y su mínimo local se encuentra en $f(0,...,0)=0$.
+
+### Función de Schwefel
+
+$$ f(\mathbf{x}) = 418.9829d - \sum_{i=1}^{d} x_i \sin(\sqrt{|x_i|}) $$
+
+Segun @simonfraser_rosenbrock La función de Schwefel es compleja, con muchos mínimos locales. Normalmente se evalua en el hipercubo \$x_i \in \[-500,500\] \$. Su minimo global está en $f(420.9687,...,420.9687)=0$
+
+### Función de Griewank
+
+$$ f(\mathbf{x}) = 1 + \frac{1}{4000} \sum_{i=1}^{d} x_i^2 - \prod_{i=1}^{d} \cos\left(\frac{x_i}{\sqrt{i}}\right) $$
+
+Segun @simonfraser_rosenbrock la función de Griewank tiene muchos mínimos locales generalizados, que se distribuyen de forma regular. Lo que hace compleja su optimización al minimo global. Normalmente se evalua en el hipercubo \$x_i \in \[-600,600\] \$. Su minimo global está en $f(0,...,0)=0$
+
+### Función Goldstein-Price
+
+$$
+\begin{align}
+f(x_1, x_2) = & \left[1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)\right] \\
+         & \left[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)\right]
+\end{align}
+$$
+
+La función Goldstein-Price es una función en 2 dimensiones y tiene varios mínimos locales. Segun @molga2005test, la función generalmente se evalúa en el cuadrado $x_1 \in [-2, 2]$ y $x_1 \in [-2, 2]$ . Su mínimo global es $f(0,-1) = 3$
+
+### Función de las seis jorobas de camello
+
+$$ f(x_1, x_2) = \left(4 - 2.1x_1^2 + \frac{x_1^4}{3}\right)x_1^2 + x_1x_2 + \left(-4 + 4x_2^2\right)x_2^2 $$
+
+La función de las seis jorobas de camello es una función en 2 dimensiones.Segun @molga2005test la función tiene seis mínimos locales, dos de los cuales son globales y recomienda evaluar la función en el rectángulo $x_1 \in [-3, 3], x_2 \in [-2, 2]$, donde los mínimos globales son $f(0.0898,-0.7126) = -1.0316$ y $f(-0.0898, 0.7126) = -1.0316$
+:::
+
+## Proceso de optimización
+
+### Optimización por descenso del gradiente
+
+::: panel-tabset
+#### Función de Rosenbrock
+
+$$ f(x_1, x_2) = (a - x_1)^2 + b(x_2 - x_1^2)^2 $$
+
+#### Función de Schwefel
+
+$$ f(x_1,x_2) = 418.9829n - \sum_{i=1}^{2} x_i \sin(\sqrt{|x_i|}) $$
+
+#### Función de Griewank
+
+$$ f(x_1,x_2) = 1 + \frac{1}{4000} \sum_{i=1}^{2} x_i^2 - \prod_{i=1}^{2} \cos\left(\frac{x_i}{\sqrt{i}}\right) $$
+
+#### Función Goldstein-Price
+
+$$
+\begin{align}
+f(x_1, x_2) = & \left[1 + (x_1 + x_2 + 1)^2 (19 - 14x_1 + 3x_1^2 - 14x_2 + 6x_1x_2 + 3x_2^2)\right] \\
+         & \left[30 + (2x_1 - 3x_2)^2 (18 - 32x_1 + 12x_1^2 + 48x_2 - 36x_1x_2 + 27x_2^2)\right]
+\end{align}
+$$
+
+#### Función de las seis jorobas de camello
+
+$$ f(x_1, x_2) = \left(4 - 2.1x_1^2 + \frac{x_1^4}{3}\right)x_1^2 + x_1x_2 + \left(-4 + 4x_2^2\right)x_2^2 $$
+:::
+
+### Tareas:
+
+1.  **Escoja dos funciones de prueba.**
+2.  **Optimización con método de descenso por gradiente:**
+    -   Optimice las funciones seleccionadas en **dos y tres dimensiones** usando un **método de descenso por gradiente** con condición inicial aleatoria.
+3.  **Optimización con métodos heurísticos:**
+    -   Optimice las funciones seleccionadas en **dos y tres dimensiones** usando:
+        -   Algoritmos evolutivos.
+        -   Optimización de partículas.
+        -   Evolución diferencial.
+4.  **Representación visual:**
+    -   Cree un **GIF animado** o un **video** que muestre el proceso de optimización usando:
+        -   **Descenso por gradiente**.
+        -   **Métodos heurísticos**.
+
+### Discusión:
+
+Reflexione sobre los siguientes puntos: - ¿Qué aportaron los métodos de **descenso por gradiente** y qué aportaron los **métodos heurísticos**? - Para responder a esta pregunta, considere: - El **valor final** de la función objetivo. - El **número de evaluaciones** de la función objetivo. - Es posible que se requiera realizar **varias corridas** de los algoritmos para obtener conclusiones significativas.
+
+# Segunda parte: Optimización Combinatoria
+
+## Problema del Viajero:
+
+Un vendedor debe realizar un recorrido por **todas las capitales** de los **32 estados** de los **Estados Unidos Mexicanos**.
+
+### Tareas:
+
+1.  **Optimización con métodos metaheurísticos:**
+    -   Utilice **colonias de hormigas** para encontrar el orden óptimo del recorrido.
+    -   Utilice **algoritmos genéticos** para encontrar el orden óptimo del recorrido.
+2.  **Costo del recorrido:**
+    -   El costo de desplazamiento entre ciudades se calcula como la suma de:
+        -   El valor de la **hora del vendedor** (este es un parámetro que debe estudiarse).
+        -   El **costo de los peajes**.
+        -   El **costo del combustible**.
+    -   Cada equipo debe definir el **vehículo** que utilizará el vendedor para realizar el recorrido y, con base en esta elección, **calcular el costo del combustible**.
+
+### Representación Visual:
+
+-   Cree un **GIF animado** o un **video** que muestre cómo se comporta la **mejor solución** encontrada, usando un **gráfico del recorrido** en el mapa de México.
+
+------------------------------------------------------------------------
+
+### Discusión:
+
+Reflexione sobre: - Los resultados obtenidos con las **colonias de hormigas** y los **algoritmos genéticos**. - Comparación de costos y tiempo de ejecución.
+
+### Solución:
+
+#### Extracción datos:
+
+Para empezar a solucionar el problema, es necesario obtener información sobre el valor del salario del vendedor, el costo de los peajes, y definir el modelo del automóvil junto con su respectivo gasto de gasolina, para calcular el gasto total destinado al combustible. En todo el proceso de extracción de la información se tomaron las capitales de cada estado como la ciudad de referencia para obtener la información.
+
+##### Distancias y tiempo de conducción
+
+Podemos obtener la tabla de distancias y tiempo de conducción entre las ciudades, de manera sencilla utilizando el siguiente [sitio web](https://mx.mejoresrutas.com/). Dicho sitio web nos permite obtener la tabla de distancias y la tabla de tiempo de conducción entre las ciudades ingresando el nombre de cada una de ellas.
+
+##### Peajes
+
+Para obtener la información de los peajes, utilizamos la siguiente [página](https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta), que contiene datos sobre el costo de los peajes para desplazarse entre dos ciudades.
+
+Debido al gran número de combinaciones posibles, programamos un bot en Selenium que realiza web scraping en dicho sitio, lo que nos permitió automatizar la extracción de la información. A continuación, se muestra el código utilizado para programar el bot.
+
+```{python}
+#| title: "Código bot para la extracción de los precios de los peajes"
+#| eval: false
+driver = webdriver.Chrome()
+
+# Navegar a la página web
+driver.get('https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta')
+
+# Diccionario con estados y sus capitales
+estados_capitales = {
+    'Aguascalientes': 'Aguascalientes',
+    'Baja California': 'Mexicali',
+    'Baja California Sur': 'La Paz',
+    'Campeche': 'Campeche',
+    'Coahuila': 'Saltillo',
+    'Colima': 'Colima',
+    'Chiapas': 'Tuxtla Gutiérrez',
+    'Chihuahua': 'Chihuahua',
+    'Distrito Federal': 'Cd. De México (Zócalo)',
+    'Durango': 'Durango',
+    'Guanajuato': 'Guanajuato',
+    'Guerrero': 'Chilpancingo',
+    'Hidalgo': 'Pachuca',
+    'Jalisco': 'Guadalajara',
+    'México': 'Toluca',
+    'Michoacán': 'Morelia',
+    'Morelos': 'Cuernavaca',
+    'Nayarit': 'Tepic',
+    'Nuevo León': 'Monterrey',
+    'Oaxaca': 'Oaxaca',
+    'Puebla': 'Puebla',
+    'Querétaro': 'Querétaro',
+    'Quintana Roo': 'Chetumal',
+    'San Luis Potosí': 'San Luis Potosí',
+    'Sinaloa': 'Culiacán',
+    'Sonora': 'Hermosillo',
+    'Tabasco': 'Villahermosa',
+    'Tamaulipas': 'Cd. Victoria',
+    'Tlaxcala': 'Tlaxcala',
+    'Veracruz': 'Xalapa',
+    'Yucatán': 'Mérida',
+    'Zacatecas': 'Zacatecas'
+}
+
+
+
+estados = list(estados_capitales.keys())
+matriz_resultados = pd.DataFrame(index=estados, columns=estados)
+
+for estado_origen in estados:
+    for estado_destino in estados:
+        if estado_origen == estado_destino:
+            continue
+
+        try:
+            select_element_origen = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.NAME, 'edoOrigen'))
+            )
+            select_origen = Select(select_element_origen)
+            select_origen.select_by_visible_text(estado_origen)
+            time.sleep(2)  
+
+            capital_origen = estados_capitales[estado_origen]
+            select_element_ciudad_origen = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.NAME, 'ciudadOrigen'))
+            )
+            select_ciudad_origen = Select(select_element_ciudad_origen)
+            select_ciudad_origen.select_by_visible_text(capital_origen)
+
+            select_element_destino = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.NAME, 'edoDestino'))
+            )
+            select_destino = Select(select_element_destino)
+            select_destino.select_by_visible_text(estado_destino)
+            time.sleep(2)  
+
+            capital_destino = estados_capitales[estado_destino]
+            select_element_ciudad_destino = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.NAME, 'ciudadDestino'))
+            )
+            select_ciudad_destino = Select(select_element_ciudad_destino)
+            select_ciudad_destino.select_by_visible_text(capital_destino)
+
+            boton_consultar = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.NAME, 'cmdEnviar'))
+            )
+            boton_consultar.click()
+            time.sleep(3)
+
+            resultado_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, '(//tr[@class="tr_gris"])[last()]/td[@align="right"][last()]'))
+            )
+            resultado_texto = resultado_element.text.strip()  # .strip() elimina espacios adicionales
+            matriz_resultados.at[estado_origen, estado_destino] = resultado_texto
+            print(f"De {estado_origen} a {estado_destino}: {resultado_texto}")
+
+        except Exception as e:
+            print(f"No se pudo extraer el valor para {estado_origen} a {estado_destino}: {e}")
+            matriz_resultados.at[estado_origen, estado_destino] = None
+
+        driver.get('https://app.sct.gob.mx/sibuac_internet/ControllerUI?action=cmdEscogeRuta')
+        time.sleep(3)  
+
+print(matriz_resultados)
+
+driver.quit()
+```
+
+#### Definición gastos:
+
+En la siguiente sección definimos los gastos que se deben de consultar, como el salario del vendedor, el modelo del carro y su gasto de combustible.
+
+##### Salario del vendedor
+
+Para definir el salario del vendedor, tomaremos como referencia el salario minimo en México, el cual actualmente se encuentra 248,93 pesos diarios, por lo cual, para una jornada de 8 horas, el salario mínimo por hora es de 31,11625, por lo cual definiremos el salario en 35 pesos mexicanos por hora.
+
+##### Modelo del carro y gasto en gasolina
+
+El modelo de carro que definiremos es un Nissan Versa debido a ser el modelo de carro más vendido actualmente en México, con lo cual permitirá hacer una estimación más justa del costo total de realizar la ruta por los 32 estados mexicanos en el contexto de dicho país.
+
+En carreteras el rendimiento promedio de este modelo por galón es de 64 kilómetros, además el tipo de gasolina que utiliza, en México se suele llamar "Gasolina Magna" la cual a día del 14 de Noviembre tiene un precio promedio de 23.96 pesos mexicanos por galón.
+
+#### Transformaciones
+
+Con la información anterior debemos calcular el costo de desplazamiento entre las ciudades, sin embargo, se observa como no toda la información se encuentra en pesos mexicanos, hay información en galones, otra en horas, otra en kilómetros, etc. Por lo cual vamos a realizar las siguientes transformaciones en las unidades para poder sumar toda la información como gasto en pesos mexicanos. Notemos que para el caso de los peajes ya estos estan en pesos mexicanos por lo que no necesitamos cambiar las unidades.
+
+##### Tiempo de viaje
+
+El costo por el salario del vendedor es calculado como:
+
+\$\$ \\text{Costo vendedor} = \\text{tiempo} \\times \\text{salario del vendedor} \$\$
+
+##### Gasolina para el viaje
+
+El gasto total en gasolina lo calculamos como:
+
+\$\$ \\text{Costo gasolina} = \\left( \\frac{\\text{Distancia}}{\\text{Rendimiento (km/galón)}} \\right) \\times \\text{Precio por galón} \$\$
+
+#### Gasto total
+
+Con todo lo realizado anteriormente ya contamos con la información que necesitamos y en las unidades requeridas para sumar todo como pesos mexicanos.
+
+$$
+\text{Gasto recorrido} = \text{Costo gasolina} + \text{Costo vendedor} + \text{Costo Peajes}
+$$
+
+#### Ruta óptima
+
+Ahora con todo en las mismas unidades podemos pasar a utilizar los algortimos de colonia de hormigas y algoritmos genéticos para encontrar la ruta óptima del vendedor a través de los 32 estados de México.
+
+##### Colonia de Hormigas
+
+Los **algoritmos de colonia de hormigas (Ant Colony Optimization, ACO)** son una técnica de optimización basada en la inteligencia colectiva observada en las colonias de hormigas naturales. Se inspiraron en el comportamiento de las hormigas en la naturaleza para resolver problemas complejos de optimización combinatoria. Los hiperparámetros del modelo son los siguientes:
+
+-   **Cantidad de hormigas:** Cantidad de hormigas que participarán en cada iteración de la búsqueda de soluciones. Influye en la capacidad del algoritmo de explorar diferentes soluciones de manera simultánea. En nuestro caso utilizaremos 32 hormigas, es decir, igual al número de estados en México.
+
+-   **Alpha**: Controla la influencia de la feromona en la probabilidad de que una hormiga elija ese camino. A medida que el valor aumenta, las hormigas son más propensas a seguir caminos con más feromona. Utilizamos un valor de 1 para una influencia moderada de las feromonas depositadas.
+
+-   **Beta**: Controla la preferencia de las hormigas por caminos más "baratos" o prometedores, lo cual ayuda aumentar la exploración. Utilizamos un valor de 2 ya que buscamos minimizar el costo del viaje.
+
+-   **\\(\\rho\\)**: Indica la tasa de evaporación de la feromona, lo cual evita que las soluciones previas influencien las iteraciones futuras. Seleccionamos una tasa de evaporación del 0.5, es decir, el 50% de las feromonas se evaporan en cada iteración.
+
+-   **\\(Q\\)**: Cantidad de feromona depositada por una hormiga en su recorrido tras encontrar una solución. Utilizamos un valor de 100 para indicar la cantidad de feromonas en el camino.
+
+Con los hiperparámetros definidos, podemos pasar a ejecutar el algoritmo de colonia de hormigas. La solución encontrada se puede observar en la Figura
+
+##### Algoritmo genético
+
+Los **algoritmos genéticos (Genetic Algorithms, GA)** son una técnica de optimización inspirada en los principios de la selección natural y la evolución biológica. Los GA buscan soluciones óptimas mediante la creación, evaluación y modificación de una población de individuos, representando posibles soluciones a un problema dado. La evolución de la población se realiza mediante operadores genéticos como la mutación. Los hiperparámetros clave del modelo son los siguientes:
+
+-   **Tamaño de la población**: Define el número de individuos en cada generación. Un tamaño de población más grande permite una mejor exploración del espacio de soluciones, pero también aumenta el tiempo de cómputo. En nuestro caso, utilizamos una población de 100 individuos, lo que proporciona un equilibrio adecuado entre diversidad y eficiencia computacional.
+
+-   **Número de generaciones**: Especifica cuántas veces se evolucionará la población mediante el proceso de selección, cruce y mutación. Utilizamos 200 generaciones para permitir al algoritmo explorar el espacio de búsqueda y converger hacia una solución óptima o cercana al óptimo.
+
+-   **Tasa de mutación**: Representa la probabilidad de que un gen sea modificado aleatoriamente en un individuo. La mutación introduce variación genética, lo que ayuda a explorar nuevas áreas del espacio de búsqueda y a evitar estancamientos en óptimos locales. Utilizamos una tasa de mutación de 0.1 (10%), lo que mantiene una buena cantidad de diversidad sin perturbar excesivamente a la población.
